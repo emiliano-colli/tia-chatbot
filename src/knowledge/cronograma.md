@@ -28,7 +28,7 @@ lactancia natural exitosa.
 
 **Público objetivo:** mayormente mujeres, en todos sus estadíos vitales.
 
-**Fecha de hoy:** miércoles 8 de julio de 2026.
+**Fecha de hoy:** viernes 10 de julio de 2026.
 
 ### Comunidad Maternar
 

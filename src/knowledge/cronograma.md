@@ -5,6 +5,9 @@
 TRAMA es un espacio dedicado al bienestar para la mujer, ubicado en 
 Garibaldi 170, Lomas de Zamora, Provincia de Buenos Aires, Argentina.
 
+Dirección : Garibaldi 170 entre Av. Meeks y España. ,B1834 Temperley, Provincia de Buenos Aires, Argentina.
+Estacionamiento : En los alrededores hay mucho espacio de estacionamiento.
+
 Dentro del espacio se desarrollan:
 - Actividades presenciales grupales o individuales, con frecuencia regular, 
   guiadas por profesionales.

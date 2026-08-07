@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from src.chatbot import TeaChatbot
+from src.chatbot import TiaChatbot
 
-app = FastAPI(title="Téa Chatbot API")
-bot = TeaChatbot()
+app = FastAPI(title="TIA Chatbot API")
+bot = TiaChatbot()
 
 class ChatRequest(BaseModel):
     session_id: str

@@ -6,7 +6,7 @@ from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-class TeaChatbot:
+class TiaChatbot:
     def __init__(self):
         self.client = OpenAI(api_key=config.OPENAI_API_KEY)
         self.system_prompt = load_system_prompt()

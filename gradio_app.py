@@ -1,7 +1,7 @@
 import gradio as gr
-from src.chatbot import TeaChatbot
+from src.chatbot import TiaChatbot
 
-bot = TeaChatbot()
+bot = TiaChatbot()
 
 
 def chat_fn(message, history):

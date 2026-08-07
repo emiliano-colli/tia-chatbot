@@ -1,16 +1,16 @@
-from src.chatbot import TeaChatbot
+from src.chatbot import TiaChatbot
 
 def main():
-    tea = TeaChatbot()
+    tia = TiaChatbot()
     session_id = "default"
-    print("Téa 🌿 (escribí 'salir' para terminar)\n")
+    print("TIA 🌿 (escribí 'salir' para terminar)\n")
     while True:
         user_input = input("Vos: ")
         if user_input.lower() in ("salir", "exit", "quit"):
-            print("Téa: ¡Hasta pronto! 🌿")
+            print("TIA: ¡Hasta pronto! 🌿")
             break
-        respuesta = tea.ask(session_id, user_input)
-        print(f"Téa: {respuesta}\n")
+        respuesta = tia.ask(session_id, user_input)
+        print(f"TIA: {respuesta}\n")
 
 if __name__ == "__main__":
     main()

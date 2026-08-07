@@ -1,4 +1,4 @@
-# Téa Chatbot
+# TIA Chatbot
 
 Asistente virtual de TRAMA y Comunidad Maternar.
 

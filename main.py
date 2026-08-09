@@ -1,12 +1,13 @@
 from src.chatbot import TiaChatbot
+from src.utils.session_end import is_session_end_message
 
 def main():
     tia = TiaChatbot()
     session_id = "default"
-    print("TIA 🌿 (escribí 'salir' para terminar)\n")
+    print("TIA 🌿 (escribí 'salir', 'chau', 'fin'… para terminar)\n")
     while True:
         user_input = input("Vos: ")
-        if user_input.lower() in ("salir", "exit", "quit"):
+        if is_session_end_message(user_input):
             tia.end_session(session_id, reason="formal")
             print("TIA: ¡Hasta pronto! 🌿")
             break

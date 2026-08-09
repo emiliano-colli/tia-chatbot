@@ -15,10 +15,10 @@ Asistente virtual de TRAMA y Comunidad Maternar.
 
 ## Ejecutar
 
-- CLI: `python main.py` (escribí `salir` para cerrar y notificar)
+- CLI: `python main.py` (cerrá con `salir`, `chau`, `fin`, `me fui`, etc.)
 - API: `uvicorn app.api:app --reload` — `POST /chat`, `POST /end/{session_id}` (y `/reset` como alias)
-- Gradio: `python gradio_app.py` (`salir` cierra la sesión Gradio)
+- Gradio: `python gradio_app.py` (mismas frases de cierre que la CLI)
 
 ## Notificación al admin
 
-Al cerrar por `salir`/`/end` o por timeout, se envía un email PING con contacto, intereses y log de la charla.
+Al cerrar por despedida/`/end` o por timeout, se envía un email PING con contacto, intereses y log de la charla.

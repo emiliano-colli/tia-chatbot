@@ -141,7 +141,7 @@ class TiaChatbot:
         if history is None:
             return False
 
-        summary = build_session_summary(history)
+        summary = build_session_summary(history, client=self.client)
         send_admin_ping(summary)
         logger.info("Sesión %s finalizada (%s)", session_id, reason)
         return True

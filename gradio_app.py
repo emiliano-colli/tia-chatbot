@@ -5,6 +5,9 @@ bot = TiaChatbot()
 
 
 def chat_fn(message, history):
+    if (message or "").strip().lower() in ("salir", "exit", "quit"):
+        bot.end_session("gradio", reason="formal")
+        return "¡Hasta pronto! 🌿 Escribí de nuevo cuando quieras retomar."
     return bot.ask("gradio", message)
 
 

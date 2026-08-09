@@ -17,10 +17,20 @@ def chat(request: ChatRequest):
     reply = bot.ask(request.session_id, request.message)
     return ChatResponse(reply=reply)
 
+@app.post("/end/{session_id}")
+def end_session(session_id: str):
+    closed = bot.end_session(session_id, reason="formal")
+    if not closed:
+        return {"status": "sin sesión activa"}
+    return {"status": "sesión finalizada y admin notificado"}
+
 @app.post("/reset/{session_id}")
 def reset(session_id: str):
-    bot.reset_session(session_id)
-    return {"status": "sesión reiniciada"}
+    """Alias de /end: cierra y envía PING al admin."""
+    closed = bot.end_session(session_id, reason="reset")
+    if not closed:
+        return {"status": "sin sesión activa"}
+    return {"status": "sesión finalizada y admin notificado"}
 
 @app.get("/health")
 def health():

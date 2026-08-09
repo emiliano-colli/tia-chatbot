@@ -7,6 +7,7 @@ def main():
     while True:
         user_input = input("Vos: ")
         if user_input.lower() in ("salir", "exit", "quit"):
+            tia.end_session(session_id, reason="formal")
             print("TIA: ¡Hasta pronto! 🌿")
             break
         respuesta = tia.ask(session_id, user_input)

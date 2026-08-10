@@ -102,7 +102,7 @@ def test_llm_summary_name_phone_together_and_menu_interest():
         {
             "nombre": "Emiliano",
             "telefono": "1167462412",
-            "intereses": "Yoga Postparto (inscripción)",
+            "intereses": "Yoga Postparto — solicitó inscripción",
         }
     )
     summary = build_session_summary(history, client=client)
@@ -113,8 +113,40 @@ def test_llm_summary_name_phone_together_and_menu_interest():
     assert "Emiliano" in body
     assert "1167462412" in body
     assert "Yoga Postparto" in body
+    assert "solicitó inscripción" in body
     assert "Usuario: Emiliano 1167462412" in body
     assert "Usuario: 8" in body
+
+
+def test_llm_summary_marks_appointment_request():
+    history = [
+        {"role": "user", "content": "Hola, me llamo Laura 1144445555"},
+        {"role": "assistant", "content": "Hola Laura"},
+        {"role": "user", "content": "quiero sacar turno para masaje"},
+        {"role": "assistant", "content": "Te cuento sobre masajes..."},
+    ]
+    client = _mock_llm_client(
+        {
+            "nombre": "Laura",
+            "telefono": "1144445555",
+            "intereses": "Masaje — solicitó turno",
+        }
+    )
+    summary = build_session_summary(history, client=client)
+    _, body = format_ping_email(summary)
+    assert "Masaje" in body
+    assert "solicitó turno" in body
+
+
+def test_system_prompt_forbids_fake_enrollment():
+    from src.prompts.loader import load_system_prompt
+
+    prompt = load_system_prompt()
+    assert "LÍMITES: INFORMACIÓN VS. FORMALIZACIÓN" in prompt
+    assert "No podés" in prompt or "no lo simules" in prompt
+    assert "procedo a registrar tu inscripción" in prompt
+    assert "confirmación de inscripción" not in prompt
+    assert "horario asignado" not in prompt
 
 
 def test_llm_failure_falls_back_to_heuristic():

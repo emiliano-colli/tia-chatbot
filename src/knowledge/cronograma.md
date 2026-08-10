@@ -49,6 +49,11 @@ el destete y la vuelta al trabajo y la crianza.
 - Instagram: https://www.instagram.com/maternaryoga/
 - Facebook: https://www.facebook.com/maternaryoga
 
+> **Contacto para inscripción/turnos:** por ahora el canal público
+> documentado son las redes de TRAMA (Instagram/Facebook). No hay
+> WhatsApp ni teléfono de administración cargado en esta base; no
+> inventar otros canales.
+
 ---
 
 # AGENDA DE ACTIVIDADES GRUPALES
@@ -315,3 +320,50 @@ Práctica para todos los niveles: asanas, respiración y relajación final.
 - 4 clases (1x/semana): $50.000
 - 8 clases (2x/semana): $78.000
 - Clase suelta/prueba: $15.000
+
+---
+
+# AGENDA DE SERVICIOS
+
+> **Ubicación:** Garibaldi 170, Lomas de Zamora
+> **Nota general:** Todos los servicios y/o sesiones requieren cita previa.
+> **Salones:** Hay dos salas para servicios: Espacio de Consulta y Orientación
+> (**Consultorio**) y Centro de Bienestar (**Calma**). Pueden usarse en
+> simultáneo.
+
+---
+
+## 1. Masajes
+
+### Descripción
+Experiencia holística de masajes relajantes, tonificantes, descontracturantes
+y/o drenajes linfáticos, adaptados a las circunstancias vitales de cada
+persona. Propuestas disponibles:
+
+- **Masaje descontracturante** — alivia tensiones, contracturas y sobrecargas musculares.
+- **Masaje relajante** — favorece la relajación, disminuye el estrés y conecta con el bienestar corporal.
+- **Masaje tonificante** — estimula la circulación y la tonicidad de los tejidos.
+- **Drenaje linfático manual** — favorece el movimiento de la linfa; puede ayudar con edemas y sensación de pesadez.
+- **Masaje prenatal** — adaptado al embarazo; alivia molestias y favorece el descanso.
+- **Masaje post parto** — acompaña la recuperación y el cuidado corporal tras el nacimiento.
+
+Precio único por sesión para cualquiera de los tipos listados (ver Valores).
+
+### Requisitos
+- No hay requisitos formales; informar cualquier dolencia previa o dato relevante.
+
+### Profesionales
+- Gabriela Leporini ("Gaby")
+- Ivana Agüero ("Ivi")
+
+### Disponibilidad y reserva
+- **Lugar:** Sala Calma (climatización frío/calor, baño privado, música y aromaterapia).
+- **Agenda:** se acuerda según disponibilidad de Gaby o Ivi (no hay grilla fija de días/horarios en esta base).
+- **Formalización:** el turno (y la coordinación con la profesional) lo gestiona el
+  **equipo de TRAMA**. Canal público documentado: redes de TRAMA
+  (Instagram/Facebook de esta base). Si la persona deja nombre y teléfono en el
+  chat, el equipo puede contactarla.
+
+### Valores
+- 1 sesión de masajes (cualquier tipo listado arriba), duración ~1 hora: **$50.000**
+- Para reservar el turno se solicita una **seña del 50%**.

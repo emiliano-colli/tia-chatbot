@@ -42,7 +42,9 @@ A partir del diálogo, devolvé SOLO un JSON con estas claves:
 Reglas:
 - Usá únicamente información del diálogo; no inventes.
 - Nombre y teléfono pueden venir en el mismo mensaje (ej. "Emiliano 1167462412").
-- Si el usuario confirma inscripción a una clase mencionada, incluí esa clase en intereses.
+- Si el usuario pidió inscribirse a una actividad, en "intereses" incluí la actividad y la marca "solicitó inscripción" (ej. "Yoga Postparto — solicitó inscripción").
+- Si el usuario pidió turno/reserva de un servicio, en "intereses" incluí el servicio y la marca "solicitó turno" (ej. "Masaje — solicitó turno").
+- No asumas que la inscripción o el turno ya fueron confirmados por TIA; solo registrá la solicitud si el diálogo la muestra.
 """
 
 

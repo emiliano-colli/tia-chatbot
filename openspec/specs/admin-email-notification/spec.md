@@ -36,6 +36,17 @@ Al finalizar una sesión, el sistema MUST construir el resumen de Contacto e Int
 - **WHEN** falla la generación del resumen inteligente
 - **THEN** el sistema igualmente puede completar el cierre con PING usando valores explícitos de dato no disponible y el log completo
 
+### Requirement: PING interests flag enrollment or appointment requests
+Cuando el diálogo indica que la persona solicitó inscripción a una actividad o turno/reserva de un servicio, el resumen de Intereses del email PING MUST incluir una marca explícita de esa solicitud (por ejemplo junto al nombre de la actividad/servicio), sin exigir un campo nuevo en el mail.
+
+#### Scenario: Enrollment request reflected in interests
+- **WHEN** la sesión finaliza tras un pedido claro de inscripción a una actividad identificada
+- **THEN** el campo Intereses del PING menciona esa actividad y que se solicitó inscripción
+
+#### Scenario: Appointment request reflected in interests
+- **WHEN** la sesión finaliza tras un pedido claro de turno para un servicio identificado
+- **THEN** el campo Intereses del PING menciona ese servicio y que se solicitó turno
+
 ### Requirement: Inactivity timeout ends session and notifies
 El sistema MUST rastrear la última actividad por sesión y MUST finalizar automáticamente sesiones cuya inactividad alcance `SESSION_TIMEOUT_MINUTES` (configurable vía entorno). Ese cierre MUST disparar el mismo flujo de notificación PING que el cierre formal.
 

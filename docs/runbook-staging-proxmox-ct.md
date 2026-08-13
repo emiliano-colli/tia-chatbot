@@ -83,27 +83,88 @@ chmod 750 /etc/tia-chatbot
 ```
 
 IP fija en la LAN (la que va a usar `proxy_pass` en IPFire). Anotala.
-
+192.168.0.24
 ---
 
 ## Paso 1 — Copiar el proyecto (sin venv ni .env)
 
 Desde la PC de desarrollo, **no** copies `venv/` ni `.env`.
 
-### Opción A — git clone (recomendado, igual que un VPS)
+El repo en GitHub es **privado**. Un `git clone git@github.com:...` en el CT **falla** si esa máquina no tiene una clave que GitHub conozca:
+
+```
+Permission denied (publickey).
+fatal: Could not read from remote repository.
+```
+
+Eso no significa que el repo no exista ni que la ruta `/opt/tia-chatbot` esté mal: el CT no es “vos” ante GitHub. La forma correcta en un servidor es una **deploy key de solo lectura**.
+
+Si `/opt/tia-chatbot` ya existe (lo creó `adduser --home`) y está vacío, borralo antes del clone:
+
+```bash
+ls -la /opt/tia-chatbot
+rmdir /opt/tia-chatbot   # solo si está vacío
+```
+
+### Forma correcta — Deploy key SSH (solo lectura)
 
 En el CT, como root:
 
 ```bash
-cd /opt
-# si /opt/tia-chatbot ya existe vacío por adduser --home:
-rmdir /opt/tia-chatbot 2>/dev/null || true
+mkdir -p /root/.ssh
+chmod 700 /root/.ssh
+ssh-keygen -t ed25519 -C "tia-ct-proxmox" -f /root/.ssh/tia_github -N ""
+cat /root/.ssh/tia_github.pub
+```
+
+Copiá **toda** la línea `.pub`.
+
+En GitHub: repo **tia-chatbot** → **Settings → Deploy keys → Add deploy key**:
+
+- Title: `proxmox-ct-tia`
+- Key: el contenido de `tia_github.pub`
+- **Allow write access:** desmarcado (solo `git clone` / `git pull`)
+
+Decile a git que use esa clave con `github.com`:
+
+```bash
+cat >> /root/.ssh/config << 'EOF'
+Host github.com
+  HostName github.com
+  User git
+  IdentityFile /root/.ssh/tia_github
+  IdentitiesOnly yes
+EOF
+chmod 600 /root/.ssh/config
+ssh -T git@github.com
+```
+
+El mensaje típico de éxito es `Hi … You've successfully authenticated` (aunque no te deje shell). Después:
+
+```bash
 git clone git@github.com:emiliano-colli/tia-chatbot.git /opt/tia-chatbot
-# o HTTPS si no hay clave SSH en el CT
 chown -R tia:tia /opt/tia-chatbot
 ```
 
-### Opción B — copiar archivos (scp / WinSCP)
+Así el CT puede actualizar con `git pull` sin usar tu usuario ni un token personal. Es el mismo esquema que en un VPS.
+
+### Alternativa A — HTTPS + Personal Access Token
+
+Más rápido para destrabarse; el token es de **tu** usuario (más poder del que el CT necesita). No lo dejes en el historial del shell si podés evitarlo.
+
+En GitHub: **Settings → Developer settings → Personal access tokens** (classic, scope `repo`).
+
+```bash
+git clone https://github.com/emiliano-colli/tia-chatbot.git /opt/tia-chatbot
+chown -R tia:tia /opt/tia-chatbot
+```
+
+Usuario: tu usuario de GitHub.  
+Contraseña: **el token**, no la clave de la cuenta.
+
+### Alternativa B — copiar archivos (scp / WinSCP)
+
+Si no querés configurar GitHub en el CT ahora. Perdés `git pull` para actualizar.
 
 Subí el repo a `/opt/tia-chatbot` **excluyendo**:
 
@@ -286,11 +347,12 @@ Detalle conceptual: `docs/staging-produccion-canales.md` sección Proxmox.
 
 ## Actualizar el código (después del primer deploy)
 
-Si clonaste con git:
+Si clonaste con git y deploy key en `/root/.ssh`, el `pull` va **como root** (el usuario `tia` no tiene esa clave):
 
 ```bash
 cd /opt/tia-chatbot
-sudo -u tia git pull
+git pull
+chown -R tia:tia /opt/tia-chatbot
 sudo -u tia /opt/tia-chatbot/venv/bin/pip install -r requirements.txt
 # solo si el archivo del repo sigue siendo la lista corta de apps
 systemctl restart tia

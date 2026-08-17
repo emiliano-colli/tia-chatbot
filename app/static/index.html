@@ -196,10 +196,21 @@
     const sendBtn = document.getElementById("send");
     const newChatBtn = document.getElementById("new-chat");
 
+    function createSessionId() {
+      if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+        return crypto.randomUUID();
+      }
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (char) => {
+        const n = Math.floor(Math.random() * 16);
+        const value = char === "x" ? n : (n & 0x3) | 0x8;
+        return value.toString(16);
+      });
+    }
+
     function getSessionId() {
       let id = localStorage.getItem(STORAGE_KEY);
       if (!id) {
-        id = crypto.randomUUID();
+        id = createSessionId();
         localStorage.setItem(STORAGE_KEY, id);
       }
       return id;
@@ -247,7 +258,15 @@
       const message = inputEl.value.trim();
       if (!message) return;
 
-      const sessionId = getSessionId();
+      let sessionId;
+      try {
+        sessionId = getSessionId();
+      } catch (err) {
+        appendBubble("No pude iniciar la sesión en este navegador. Probá recargar la página.", "system");
+        console.error(err);
+        return;
+      }
+
       appendBubble(message, "user");
       inputEl.value = "";
       inputEl.disabled = true;

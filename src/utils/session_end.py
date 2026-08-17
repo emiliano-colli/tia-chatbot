@@ -2,6 +2,10 @@ import re
 import unicodedata
 
 
+SESSION_END_REPLY = (
+    "¡Hasta pronto! 🌿 Escribí de nuevo cuando quieras retomar."
+)
+
 _FAREWELL_PHRASES = frozenset(
     {
         "salir",

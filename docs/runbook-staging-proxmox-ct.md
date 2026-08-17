@@ -64,7 +64,9 @@ CT Debian 12.7
 
 ## Paso 0 — En el CT (sistema base)
 
-Como root (o con sudo), una vez creado el CT y con red/SSH:
+Como root (o con sudo), una vez creado el CT y con red/SSH.
+
+El usuario `tia` de más abajo es de **servicio** (`nologin`): no entra por SSH. Para terminal y SFTP desde Windows (PuTTY / WinSCP) usá un usuario humano con sudo y llave; no habilites `root`. Guía: [ssh-acceso-seguro-putty-debian.md](ssh-acceso-seguro-putty-debian.md) · [ssh-acceso-seguro-putty-debian.pdf](ssh-acceso-seguro-putty-debian.pdf).
 
 ```bash
 apt update && apt upgrade -y
@@ -310,6 +312,16 @@ curl -s -X POST http://IP-DEL-CT:8000/chat \
 
 Dos `session_id` distintos = dos charlas. Eso ya es el modelo de producción.
 
+**UI interna (chat en el browser):** con el change `internal-chat-ui`, el mismo Uvicorn sirve la página en `GET /` y assets en `/static/`. Abrí `http://IP-DEL-CT:8000/` en dos navegadores (o ventanas privadas): cada uno guarda su propio `session_id` en `localStorage` y puede chatear en paralelo sin Gradio.
+
+```bash
+curl -s -o /dev/null -w "%{http_code}" http://IP-DEL-CT:8000/
+# esperado: 200 (HTML)
+
+curl -s -o /dev/null -w "%{http_code}" http://IP-DEL-CT:8000/static/logo-trama.jpg
+# esperado: 200
+```
+
 Si `health` no responde:
 
 - `ss -lntp | grep 8000` o `journalctl -u tia -e`
@@ -322,12 +334,14 @@ Si `health` no responde:
 
 En IPFire, Nginx hace de recepción:
 
-- `proxy_pass http://IP-DEL-CT:8000;`
+- `proxy_pass http://IP-DEL-CT:8000;` para **`/`**, **`/static`**, **`/chat`**, **`/health`**, **`/end`**
 - `proxy_read_timeout` alto (60–120 s; OpenAI puede tardar)
 - HTTPS + nombre (Let’s Encrypt / DynDNS si la IP WAN es dinámica)
 - **No** publicar el puerto 8000 a Internet; solo 80/443 al IPFire
 
-Websockets no hacen falta para `/chat` de FastAPI. Sí harían falta si más adelante publicás Gradio.
+La UI interna usa la misma raíz (`/`) y logo en `/static/`; no hace falta location extra si todo el tráfico va al CT:8000.
+
+Websockets no hacen falta para `/chat` ni para la UI estática. Sí harían falta si más adelante publicás Gradio.
 
 **Hairpin NAT:** desde la WiFi de casa `https://tia.midominio.com` a veces no anda. Probar desde **4G**.
 
@@ -338,6 +352,7 @@ Detalle conceptual: `docs/staging-produccion-canales.md` sección Proxmox.
 ## Paso 7 — Seguridad mínima del piloto
 
 - Usuario `tia` sin login interactivo
+- SSH: usuario humano + llave; `PermitRootLogin no` ([guía MD](ssh-acceso-seguro-putty-debian.md) · [PDF](ssh-acceso-seguro-putty-debian.pdf))
 - `.env` no es root-readable por todo el mundo (`600`)
 - 8000 no expuesto a WAN
 - Opcional en Nginx: **basic auth** (htpasswd) para que no gasten tu OpenAI
@@ -380,7 +395,8 @@ En la PC, `pip freeze > requirements.txt` mete todo el venv: transitivas de Grad
 - [ ] venv creado en el CT; sin venv ni `.env` de Windows
 - [ ] `tia.service` activo, 1 worker, sin reload, `0.0.0.0:8000`
 - [ ] `GET /health` desde la LAN
-- [ ] Dos `session_id` = dos charlas
+- [ ] `GET /` abre la UI; dos navegadores = dos charlas en paralelo
+- [ ] Dos `session_id` = dos charlas (curl o UI)
 - [ ] Nginx/HTTPS en IPFire; 8000 no publicado a WAN
 - [ ] PING: el CT **sale** a `smtp.gmail.com:587` y a `api.openai.com`
 

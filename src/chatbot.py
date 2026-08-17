@@ -9,6 +9,7 @@ from src.knowledge.loader import load_knowledge
 from src.tools import CHATBOT_TOOLS, run_tool
 from src.notifications import build_session_summary, send_admin_ping
 from src.utils.logger import get_logger
+from src.utils.session_end import SESSION_END_REPLY, is_session_end_message
 
 logger = get_logger(__name__)
 
@@ -90,6 +91,11 @@ class TiaChatbot:
 
     def ask(self, session_id: str, user_message: str) -> str:
         self.expire_idle_sessions()
+
+        if is_session_end_message(user_message):
+            if session_id in self.sessions:
+                self.end_session(session_id, reason="formal")
+            return SESSION_END_REPLY
 
         with self._lock:
             history = self._get_history(session_id)

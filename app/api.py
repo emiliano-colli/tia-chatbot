@@ -1,8 +1,15 @@
+from pathlib import Path
+
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from src.chatbot import TiaChatbot
 
+STATIC_DIR = Path(__file__).resolve().parent / "static"
+
 app = FastAPI(title="TIA Chatbot API")
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 bot = TiaChatbot()
 
 class ChatRequest(BaseModel):
@@ -11,6 +18,10 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     reply: str
+
+@app.get("/")
+def index():
+    return FileResponse(STATIC_DIR / "index.html")
 
 @app.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest):

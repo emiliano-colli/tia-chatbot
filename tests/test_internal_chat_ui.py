@@ -62,6 +62,10 @@ def test_get_root_returns_html():
     assert "text/html" in response.headers.get("content-type", "")
     assert "TIA" in response.text
     assert "/static/logo-trama.jpg" in response.text
+    assert (
+        "Preguntame sobre clases de yoga, entrenamiento funcional, "
+        "talleres, servicios de salud, bienestar y más 🌿"
+    ) in response.text
 
 
 def test_chat_farewell_via_api():

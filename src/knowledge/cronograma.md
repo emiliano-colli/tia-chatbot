@@ -49,10 +49,29 @@ el destete y la vuelta al trabajo y la crianza.
 - Instagram: https://www.instagram.com/maternaryoga/
 - Facebook: https://www.facebook.com/maternaryoga
 
-> **Contacto para inscripción/turnos:** por ahora el canal público
-> documentado son las redes de TRAMA (Instagram/Facebook). No hay
-> WhatsApp ni teléfono de administración cargado en esta base; no
-> inventar otros canales.
+> **Contacto para inscripción/turnos:** el canal público **prioritario**
+> es el WhatsApp de consultas de TRAMA (no es el celular personal de
+> una profesional):
+> - Número: +54 11 6956-6115
+> - Link: https://wa.me/541169566115
+> - Horario: lunes a viernes, 09 a 21 hs.
+> Instagram y Facebook (arriba) son canales **secundarios**. No
+> inventar otros números, emails ni canales que no figuren en esta
+> base. No afirmar atención sábado/domingo.
+
+---
+
+# EQUIPO
+
+Fichas BIO de quienes tienen copy cargado. Si una profesional aparece
+en una agenda y no tiene ficha acá, no inventar biografía: solo el
+rol que figure en esa agenda.
+
+### Carolina Losada ("Caro")
+
+Soy Caro Losada. Creadora de Maternar y TRAMA. 
+Partera, Profe de Yoga, Doula y Puericultora. 
+TRAMA es un espacio enfocado en el movimiento consciente, acompañando cada proceso 🍀
 
 ---
 
@@ -360,9 +379,10 @@ Precio único por sesión para cualquiera de los tipos listados (ver Valores).
 - **Lugar:** Sala Calma (climatización frío/calor, baño privado, música y aromaterapia).
 - **Agenda:** se acuerda según disponibilidad de Gaby o Ivi (no hay grilla fija de días/horarios en esta base).
 - **Formalización:** el turno (y la coordinación con la profesional) lo gestiona el
-  **equipo de TRAMA**. Canal público documentado: redes de TRAMA
-  (Instagram/Facebook de esta base). Si la persona deja nombre y teléfono en el
-  chat, el equipo puede contactarla.
+  **equipo de TRAMA**. Canal público **prioritario:** WhatsApp de consultas
+  +54 11 6956-6115 (https://wa.me/541169566115), lunes a viernes 09 a 21 hs.
+  Redes de TRAMA (Instagram/Facebook de esta base) son complemento. Si la
+  persona deja nombre y teléfono en el chat, el equipo puede contactarla.
 
 ### Valores
 - 1 sesión de masajes (cualquier tipo listado arriba), duración ~1 hora: **$50.000**

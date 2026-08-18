@@ -57,6 +57,10 @@ def test_system_prompt_services_with_appointment_rules():
     assert "coordinar directamente" in prompt
     assert "pegá el dato concreto" in prompt or "URL" in prompt
     assert "no inventes" in prompt.lower()
+    assert "WhatsApp de consultas" in prompt
+    assert "horario" in prompt.lower()
+    assert "no afirmes que no hay whatsapp" in prompt.lower()
+    assert "ficha BIO" in prompt or "BIO" in prompt
 
 
 def test_knowledge_massages_fiche():
@@ -68,3 +72,21 @@ def test_knowledge_massages_fiche():
     assert "seña del 50%" in knowledge
     assert "equipo de TRAMA" in knowledge
     assert "coordinar directamente" not in knowledge.lower()
+    assert "WhatsApp de consultas" in knowledge
+    assert "+54 11 6956-6115" in knowledge
+    assert "Instagram/Facebook de esta base) son complemento" in knowledge or "son complemento" in knowledge
+
+
+def test_knowledge_whatsapp_primary_contact_and_caro_bio():
+    knowledge = load_knowledge()
+    assert "+54 11 6956-6115" in knowledge
+    assert "wa.me/541169566115" in knowledge
+    assert "lunes a viernes" in knowledge.lower()
+    assert "09 a 21" in knowledge
+    assert "No hay WhatsApp" not in knowledge
+    assert "# EQUIPO" in knowledge
+    assert 'Carolina Losada ("Caro")' in knowledge
+    assert "Creadora de Maternar y TRAMA" in knowledge
+    assert "Partera, Profe de Yoga, Doula y Puericultora" in knowledge
+    assert "movimiento consciente" in knowledge
+    assert "Bio pendiente" not in knowledge

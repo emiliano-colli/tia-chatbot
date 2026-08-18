@@ -1,21 +1,4 @@
-# assistant-scope
-
-## Purpose
-
-Definir qué puede hacer TIA (informar e identificar) frente a lo que queda en administración (formalizar inscripciones, turnos, cupo y pago).
-
-## Requirements
-
-### Requirement: Assistant only informs and does not formalize bookings
-TIA MUST limitarse a brindar información sobre actividades, servicios y eventos, e identificar al interesado. MUST NOT formalizar inscripciones, reservar turnos, asignar cupos ni afirmar que la persona ya quedó inscripta o con turno confirmado. Cupo y pago, cuando apliquen, MUST quedar a cargo de la administración de TRAMA. Esta regla MUST aplicarse tanto a clases/actividades grupales como a servicios con cita (por ejemplo masajes o kinesiología).
-
-#### Scenario: User asks to enroll in a class
-- **WHEN** el usuario pide inscribirse a una actividad
-- **THEN** TIA informa que la inscripción la confirma el equipo de TRAMA (cupo/pago) y MUST NOT decir que ya realizó o completó la inscripción
-
-#### Scenario: User asks to book a service appointment
-- **WHEN** el usuario pide sacar turno para un servicio
-- **THEN** TIA aplica la misma limitación: no reserva ni confirma el turno; deriva la formalización a administración
+## MODIFIED Requirements
 
 ### Requirement: Enrollment requests are deferred with contact path
 Cuando el usuario solicite inscripción o turno, TIA MUST: (1) aportar información útil disponible sobre el servicio/actividad sin inventar datos faltantes —incluyendo, para servicios con cita, tipos, precio, seña, duración o sala si están en knowledge—, (2) explicar que la formalización la hace administración / equipo de TRAMA, (3) ofrecer un canal de contacto de TRAMA si está disponible en la base de conocimiento, **priorizando el WhatsApp de consultas (número y horario) cuando figuren**, y las redes oficiales solo como complemento con el dato concreto de la base, y (4) asegurar que la consulta quede para seguimiento (identificación / cierre con PING). Si no hay canal en la base de conocimiento, MUST NOT inventarlo y MUST indicar que el equipo contactará con los datos relevados. MUST NOT afirmar que no hay WhatsApp cuando el número está en knowledge. MUST NOT presentar el cierre del turno como una coordinación directa usuario–profesional sustituyendo ese flujo.

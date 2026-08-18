@@ -15,9 +15,12 @@ bot = TiaChatbot()
 class ChatRequest(BaseModel):
     session_id: str
     message: str
+    origin: str = "web"
+
 
 class ChatResponse(BaseModel):
     reply: str
+    consulta_id: int | None = None
 
 @app.get("/")
 def index():
@@ -25,8 +28,8 @@ def index():
 
 @app.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest):
-    reply = bot.ask(request.session_id, request.message)
-    return ChatResponse(reply=reply)
+    result = bot.ask(request.session_id, request.message, origin=request.origin or "web")
+    return ChatResponse(reply=result.reply, consulta_id=result.consulta_id)
 
 @app.post("/end/{session_id}")
 def end_session(session_id: str):

@@ -1,10 +1,4 @@
-# admin-email-notification
-
-## Purpose
-
-Notificar por email al admin de TRAMA al finalizar una sesión (cierre formal o timeout), con formato PING: contacto, intereses y log. El resumen de contacto/intereses se interpreta desde el diálogo completo.
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Admin receives PING email on session end
 Al finalizar una sesión **con al menos un dato de contacto significativo** (nombre o teléfono reales; placeholders como `No provisto` no cuentan), el sistema MUST enviar un email a `ADMIN_EMAIL` con formato PING. El asunto MUST incluir el ID de consulta y los datos disponibles de nombre, teléfono e interés (por ejemplo `Nueva consulta TIA #{id} — {nombre} / {telefono} / {interes}`). El cuerpo MUST incluir ID, Contacto (nombre y teléfono), Intereses, Origen y el Log completo de la conversación usuario/asistente. Contacto e Intereses MUST basarse en el resumen de sesión interpretado del diálogo completo. El remitente MUST usar la cuenta SMTP configurada (`MAIL_FROM` / `SMTP_USER`), que MAY ser distinta de `ADMIN_EMAIL`. Si no hay contacto significativo, el sistema MUST NOT enviar el email.
@@ -40,17 +34,6 @@ Al finalizar una sesión, el sistema MUST construir el resumen de Contacto e Int
 - **WHEN** falla la generación del resumen inteligente y la heurística no encuentra nombre ni teléfono
 - **THEN** el sistema completa el cierre escribiendo el CSV y MUST NOT enviar PING
 
-### Requirement: PING interests flag enrollment or appointment requests
-Cuando el diálogo indica que la persona solicitó inscripción a una actividad o turno/reserva de un servicio, el resumen de Intereses del email PING MUST incluir una marca explícita de esa solicitud (por ejemplo junto al nombre de la actividad/servicio), sin exigir un campo nuevo en el mail.
-
-#### Scenario: Enrollment request reflected in interests
-- **WHEN** la sesión finaliza tras un pedido claro de inscripción a una actividad identificada
-- **THEN** el campo Intereses del PING menciona esa actividad y que se solicitó inscripción
-
-#### Scenario: Appointment request reflected in interests
-- **WHEN** la sesión finaliza tras un pedido claro de turno para un servicio identificado
-- **THEN** el campo Intereses del PING menciona ese servicio y que se solicitó turno
-
 ### Requirement: Inactivity timeout ends session and notifies
 El sistema MUST rastrear la última actividad por sesión y MUST finalizar automáticamente sesiones cuya inactividad alcance `SESSION_TIMEOUT_MINUTES` (configurable vía entorno). Ese cierre MUST escribir el CSV de consulta y MUST disparar el PING solo si hay contacto significativo, igual que el cierre formal.
 
@@ -61,10 +44,3 @@ El sistema MUST rastrear la última actividad por sesión y MUST finalizar autom
 #### Scenario: Timeout duration comes from environment
 - **WHEN** se configura `SESSION_TIMEOUT_MINUTES` en el entorno
 - **THEN** el umbral de inactividad usado por el sistema refleja ese valor
-
-### Requirement: SMTP credentials come from environment
-La configuración de envío (host, puerto, usuario, contraseña de aplicación, remitente, destinatario admin y timeout) MUST leerse desde variables de entorno / `.env`. Secretos MUST NOT hardcodearse en el código fuente.
-
-#### Scenario: Missing SMTP config fails safely on send
-- **WHEN** falta configuración SMTP requerida al intentar notificar
-- **THEN** el sistema registra el error y MUST NOT exponer secretos; el fallo de envío MUST NOT tumbar de forma no controlada el proceso de chat principal

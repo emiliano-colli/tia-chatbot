@@ -53,10 +53,24 @@
       min-width: 0;
     }
 
+    .title-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      min-width: 0;
+    }
+
     header h1 {
       margin: 0;
       font-size: 1.25rem;
       font-weight: 600;
+    }
+
+    .consulta-id {
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--muted);
+      flex-shrink: 0;
     }
 
     header p {
@@ -220,7 +234,10 @@
   <header>
     <img src="/static/logo-trama.jpg" alt="TRAMA">
     <div>
-      <h1>TIA · TRAMA</h1>
+      <div class="title-row">
+        <h1>TIA · TRAMA</h1>
+        <span id="consulta-id" class="consulta-id" hidden></span>
+      </div>
       <p>Preguntame sobre clases de yoga, entrenamiento funcional, talleres, servicios de salud, bienestar y más 🌿</p>
     </div>
   </header>
@@ -281,8 +298,21 @@
       chatEl.scrollTop = chatEl.scrollHeight;
     }
 
+    function setConsultaId(id) {
+      const el = document.getElementById("consulta-id");
+      if (!el) return;
+      if (id == null || id === "") {
+        el.hidden = true;
+        el.textContent = "";
+        return;
+      }
+      el.textContent = "#" + id;
+      el.hidden = false;
+    }
+
     function resetUi(message) {
       chatEl.innerHTML = "";
+      setConsultaId(null);
       if (message) {
         appendBubble(message, "system");
       }
@@ -329,7 +359,7 @@
         const response = await fetch("/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ session_id: sessionId, message }),
+          body: JSON.stringify({ session_id: sessionId, message, origin: "web" }),
         });
 
         if (!response.ok) {
@@ -337,6 +367,9 @@
         }
 
         const data = await response.json();
+        if (data.consulta_id != null) {
+          setConsultaId(data.consulta_id);
+        }
         appendBubble(data.reply, "bot");
 
         if (data.reply === SESSION_END_REPLY) {

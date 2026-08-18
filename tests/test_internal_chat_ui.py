@@ -33,11 +33,11 @@ def test_ask_farewell_ends_session_without_llm():
     with patch.object(bot.client.chat.completions, "create") as mock_create:
         with patch("src.chatbot.build_session_summary", return_value=fake):
             with patch("src.chatbot.send_admin_ping") as mock_send:
-                reply = bot.ask("farewell-session", "chau")
+                result = bot.ask("farewell-session", "chau")
 
-    assert reply == SESSION_END_REPLY
+    assert result.reply == SESSION_END_REPLY
     mock_create.assert_not_called()
-    mock_send.assert_called_once()
+    mock_send.assert_not_called()
     assert "farewell-session" not in bot.sessions
 
 
@@ -46,9 +46,9 @@ def test_ask_farewell_without_session_skips_ping():
 
     with patch.object(bot.client.chat.completions, "create") as mock_create:
         with patch("src.chatbot.send_admin_ping") as mock_send:
-            reply = bot.ask("new-session", "chau")
+            result = bot.ask("new-session", "chau")
 
-    assert reply == SESSION_END_REPLY
+    assert result.reply == SESSION_END_REPLY
     mock_create.assert_not_called()
     mock_send.assert_not_called()
     assert "new-session" not in bot.sessions
@@ -62,6 +62,7 @@ def test_get_root_returns_html():
     assert "text/html" in response.headers.get("content-type", "")
     assert "TIA" in response.text
     assert "/static/logo-trama.jpg" in response.text
+    assert 'id="consulta-id"' in response.text
     assert (
         "Preguntame sobre clases de yoga, entrenamiento funcional, "
         "talleres, servicios de salud, bienestar y más 🌿"
@@ -95,5 +96,5 @@ def test_chat_farewell_via_api():
     assert response.status_code == 200
     assert response.json()["reply"] == SESSION_END_REPLY
     mock_create.assert_not_called()
-    mock_send.assert_called_once()
+    mock_send.assert_not_called()
     assert "api-farewell" not in bot.sessions

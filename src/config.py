@@ -17,6 +17,12 @@ class Config:
     MAIL_FROM = os.getenv("MAIL_FROM", "") or os.getenv("SMTP_USER", "")
     ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "")
     SESSION_TIMEOUT_MINUTES = int(os.getenv("SESSION_TIMEOUT_MINUTES", "30"))
+    CONSULTATION_LOG_PATH = os.getenv(
+        "CONSULTATION_LOG_PATH", os.path.join("data", "consultas.csv")
+    )
+    CONSULTATION_SEQ_PATH = os.getenv(
+        "CONSULTATION_SEQ_PATH", os.path.join("data", "consulta_seq.txt")
+    )
 
     @classmethod
     def validate(cls):

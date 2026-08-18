@@ -72,10 +72,12 @@ def test_format_ping_email_with_contact_heuristic():
         {"role": "assistant", "content": "Claro, te cuento..."},
     ]
     summary = build_session_summary(history)
+    summary.consulta_id = 12
     subject, body = format_ping_email(summary)
 
-    assert subject.startswith("Nueva consulta TIA —")
+    assert subject.startswith("Nueva consulta TIA #12 —")
     assert "María Pérez" in subject
+    assert "ID: 12" in body
     assert "Contacto:" in body
     assert "María Pérez" in body
     assert "Intereses:" in body
@@ -91,7 +93,7 @@ def test_format_ping_email_without_contact():
     summary = build_session_summary(history)
     subject, body = format_ping_email(summary)
 
-    assert "Sin identificar" in subject
+    assert subject == "Nueva consulta TIA"
     assert "No provisto" in body
     assert "Log:" in body
 
@@ -174,11 +176,12 @@ def test_end_session_sends_ping_once():
     )
     with patch("src.chatbot.build_session_summary", return_value=fake):
         with patch("src.chatbot.send_admin_ping") as mock_send:
-            assert bot.end_session("s1", reason="formal") is True
-            assert mock_send.call_count == 1
-            assert "s1" not in bot.sessions
-            assert bot.end_session("s1", reason="formal") is False
-            assert mock_send.call_count == 1
+            with patch("src.chatbot.append_consultation_row"):
+                assert bot.end_session("s1", reason="formal") is True
+                assert mock_send.call_count == 1
+                assert "s1" not in bot.sessions
+                assert bot.end_session("s1", reason="formal") is False
+                assert mock_send.call_count == 1
 
 
 def test_expire_idle_sessions_uses_timeout():
@@ -194,10 +197,11 @@ def test_expire_idle_sessions_uses_timeout():
     )
     with patch("src.chatbot.build_session_summary", return_value=fake):
         with patch("src.chatbot.send_admin_ping") as mock_send:
-            with patch("src.chatbot.config") as mock_config:
-                mock_config.SESSION_TIMEOUT_MINUTES = 30
-                closed = bot.expire_idle_sessions()
+            with patch("src.chatbot.append_consultation_row"):
+                with patch("src.chatbot.config") as mock_config:
+                    mock_config.SESSION_TIMEOUT_MINUTES = 30
+                    closed = bot.expire_idle_sessions()
 
     assert closed == ["old"]
-    assert mock_send.call_count == 1
+    assert mock_send.call_count == 0
     assert "old" not in bot.sessions

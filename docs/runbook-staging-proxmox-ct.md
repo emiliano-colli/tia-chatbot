@@ -233,6 +233,18 @@ SMTP_PASSWORD=...
 MAIL_FROM=...
 ADMIN_EMAIL=...
 SESSION_TIMEOUT_MINUTES=30
+CONSULTATION_LOG_PATH=/var/lib/tia-chatbot/consultas.csv
+CONSULTATION_SEQ_PATH=/var/lib/tia-chatbot/consulta_seq.txt
+```
+
+El CSV guarda **todas** las consultas (ID correlativo, fecha/hora, contacto, interés, origen `web`/`cli`). El mail PING **solo** sale si hay nombre o teléfono; un “Hola” queda en el CSV y no en el inbox.
+
+Persistí `/var/lib/tia-chatbot` (o el path que elijas) **fuera** del clone: si recreás el CT y el seq arranca de 1, se pierde la correlatividad. Permisos solo para `tia`:
+
+```bash
+mkdir -p /var/lib/tia-chatbot
+chown tia:tia /var/lib/tia-chatbot
+chmod 750 /var/lib/tia-chatbot
 ```
 
 Permisos:
@@ -399,6 +411,7 @@ En la PC, `pip freeze > requirements.txt` mete todo el venv: transitivas de Grad
 - [ ] Dos `session_id` = dos charlas (curl o UI)
 - [ ] Nginx/HTTPS en IPFire; 8000 no publicado a WAN
 - [ ] PING: el CT **sale** a `smtp.gmail.com:587` y a `api.openai.com`
+- [ ] CSV de consultas en path persistente; un “Hola” **no** manda mail, sí deja fila
 
 ---
 
@@ -409,7 +422,8 @@ En la PC, `pip freeze > requirements.txt` mete todo el venv: transitivas de Grad
 | El servicio no arranca | `journalctl -u tia -e` — casi siempre `.env`, cwd o path de uvicorn |
 | `Falta OPENAI_API_KEY` | `EnvironmentFile` y permisos del `.env` |
 | Timeout / no responde el modelo | Salida HTTPS del CT; key; cuota OpenAI |
-| PING no llega | Salida SMTP 587; App Password; `ADMIN_EMAIL` |
+| PING no llega | Salida SMTP 587; App Password; `ADMIN_EMAIL`; ¿había nombre o teléfono? Sin contacto no hay mail |
+| CSV no aparece | `CONSULTATION_LOG_PATH`; permisos de `tia` sobre el directorio |
 | Chat “mezclado” | Estás usando Gradio con `session_id` fijo, o el mismo id a propósito |
 | Tras `restart` se pierde la charla | Esperado: sesiones en RAM |
 

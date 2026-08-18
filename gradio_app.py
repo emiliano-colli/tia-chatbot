@@ -5,7 +5,7 @@ bot = TiaChatbot()
 
 
 def chat_fn(message, history):
-    return bot.ask("gradio", message)
+    return bot.ask("gradio", message, origin="gradio").reply
 
 
 demo = gr.ChatInterface(

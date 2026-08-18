@@ -54,12 +54,33 @@ class SessionSummary:
     phone: str
     interests: str
     log: str
+    consulta_id: int | None = None
+    origin: str = ""
 
     @property
     def subject_name(self) -> str:
         if self.name and self.name != "No provisto":
             return self.name
         return "Sin identificar"
+
+
+_MISSING_CONTACT = frozenset(
+    {"", "no provisto", "sin identificar", "null", "none", "n/a"}
+)
+_MISSING_INTEREST = frozenset(
+    {"", "no provisto", "sin identificar", "ver log / no detectado", "null", "none", "n/a"}
+)
+
+
+def _is_blank(value: str | None, empty: frozenset[str]) -> bool:
+    return (value or "").strip().lower() in empty
+
+
+def has_contact(summary: SessionSummary) -> bool:
+    """True si hay nombre o teléfono reales (placeholders no cuentan)."""
+    return (not _is_blank(summary.name, _MISSING_CONTACT)) or (
+        not _is_blank(summary.phone, _MISSING_CONTACT)
+    )
 
 
 def _dialog_messages(history: list) -> list[tuple[str, str]]:
@@ -177,10 +198,34 @@ def build_session_summary(history: list, client=None) -> SessionSummary:
 
 
 def format_ping_email(summary: SessionSummary) -> tuple[str, str]:
-    subject = f"Nueva consulta TIA — {summary.subject_name}"
+    segments = []
+    if not _is_blank(summary.name, _MISSING_CONTACT):
+        segments.append(summary.name.strip())
+    if not _is_blank(summary.phone, _MISSING_CONTACT):
+        segments.append(summary.phone.strip())
+    if not _is_blank(summary.interests, _MISSING_INTEREST):
+        segments.append(summary.interests.strip())
+
+    id_part = f"#{summary.consulta_id}" if summary.consulta_id is not None else ""
+    rest = " / ".join(segments)
+    if id_part and rest:
+        subject = f"Nueva consulta TIA {id_part} — {rest}"
+    elif id_part:
+        subject = f"Nueva consulta TIA {id_part}"
+    elif rest:
+        subject = f"Nueva consulta TIA — {rest}"
+    else:
+        subject = "Nueva consulta TIA"
+
+    consulta_line = (
+        f"ID: {summary.consulta_id}\n" if summary.consulta_id is not None else ""
+    )
+    origen_line = f"Origen: {summary.origin or '—'}\n"
     body = (
+        f"{consulta_line}"
         f"Contacto: {summary.name} / {summary.phone}\n"
         f"Intereses: {summary.interests}\n"
+        f"{origen_line}"
         f"Log:\n{summary.log}\n"
     )
     return subject, body

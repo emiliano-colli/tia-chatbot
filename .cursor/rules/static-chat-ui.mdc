@@ -1,0 +1,32 @@
+---
+description: Keep the static TIA chat page compact on phones; no CSS framework.
+globs: app/static/**
+alwaysApply: false
+---
+
+# Static chat UI
+
+Single HTML file, no CSS/JS framework. Header / scrollable chat / footer. Chat (`#chat`) grows; header and footer hug their content.
+
+## Mobile chrome
+
+On viewports ~360–480px the composer MUST stay compact. Do not leave a large empty gap between the farewell hint and the input.
+
+`flex-basis` follows the flex direction. A value meant as **width** in a row (`flex: 1 1 12rem`) becomes **height** if the same rule sits on a column. Override it in the column media query (`flex: 0 0 auto` or drop the basis).
+
+```css
+/* ❌ BAD — 12rem is height once the toolbar is a column */
+.toolbar span { flex: 1 1 12rem; }
+@media (max-width: 480px) {
+  .toolbar { flex-direction: column; }
+}
+
+/* ✅ GOOD */
+.toolbar span { flex: 1 1 12rem; min-width: 0; }
+@media (max-width: 480px) {
+  .toolbar { flex-direction: column; }
+  .toolbar span { flex: 0 0 auto; }
+}
+```
+
+Keep footer padding and toolbar gaps tight on small screens. Prefer wrapping or stacking controls over hiding the farewell hint or “Nueva consulta”.

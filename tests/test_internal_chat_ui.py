@@ -71,6 +71,10 @@ def test_get_root_returns_html():
     assert "visualViewport" in response.text
     assert "min-height: 0" in response.text
     assert "function renderBotMarkdown" in response.text
+    assert "md-heading" in response.text
+    assert "function isHeadingLine" in response.text
+    assert "#{1,6}" in response.text
+    assert "function skipBlanks" in response.text
     assert "noopener noreferrer" in response.text
     assert "innerHTML = text" not in response.text
     assert "data.reply" in response.text

@@ -142,6 +142,20 @@
       overflow-wrap: anywhere;
     }
 
+    .bubble.bot .md-heading {
+      font-weight: 600;
+      margin: 0.6em 0 0.35em;
+    }
+
+    .bubble.bot .md-heading:first-child {
+      margin-top: 0;
+    }
+
+    .bubble.bot .md-heading::before {
+      content: "▸ ";
+      color: var(--accent);
+    }
+
     .bubble.system {
       align-self: center;
       background: transparent;
@@ -327,6 +341,17 @@
       return /^\d+\. /.test(line);
     }
 
+    function isHeadingLine(line) {
+      return /^#{1,6}\s+/.test(line);
+    }
+
+    function skipBlanks(lines, i) {
+      while (i < lines.length && lines[i].trim() === "") {
+        i += 1;
+      }
+      return i;
+    }
+
     function appendInline(parent, text) {
       const tokenRe = /(\*\*[^*]+\*\*)|(https?:\/\/[^\s<]+)/g;
       let last = 0;
@@ -363,13 +388,25 @@
       const lines = String(text).replace(/\r\n/g, "\n").split("\n");
       let i = 0;
       while (i < lines.length) {
-        if (lines[i].trim() === "") {
+        i = skipBlanks(lines, i);
+        if (i >= lines.length) {
+          break;
+        }
+        if (isHeadingLine(lines[i])) {
+          const heading = document.createElement("p");
+          heading.className = "md-heading";
+          appendInline(heading, lines[i].replace(/^#{1,6}\s+/, ""));
+          container.appendChild(heading);
           i += 1;
           continue;
         }
         if (isUlLine(lines[i])) {
           const ul = document.createElement("ul");
-          while (i < lines.length && isUlLine(lines[i])) {
+          while (true) {
+            i = skipBlanks(lines, i);
+            if (i >= lines.length || !isUlLine(lines[i])) {
+              break;
+            }
             const li = document.createElement("li");
             appendInline(li, lines[i].replace(/^[-*] /, ""));
             ul.appendChild(li);
@@ -380,7 +417,11 @@
         }
         if (isOlLine(lines[i])) {
           const ol = document.createElement("ol");
-          while (i < lines.length && isOlLine(lines[i])) {
+          while (true) {
+            i = skipBlanks(lines, i);
+            if (i >= lines.length || !isOlLine(lines[i])) {
+              break;
+            }
             const li = document.createElement("li");
             appendInline(li, lines[i].replace(/^\d+\. /, ""));
             ol.appendChild(li);
@@ -393,6 +434,7 @@
         while (
           i < lines.length &&
           lines[i].trim() !== "" &&
+          !isHeadingLine(lines[i]) &&
           !isUlLine(lines[i]) &&
           !isOlLine(lines[i])
         ) {

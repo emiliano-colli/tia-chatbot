@@ -1,7 +1,7 @@
 # Runbook — primer staging de TIA en Proxmox (CT)
 
 **Estado:** guía operativa · **Fecha:** 2026-08-11  
-**Contexto:** `docs/staging-produccion-canales.md` (por qué este dibujo)  
+**Contexto:** `docs/staging-produccion-canales.md` (por qué este dibujo) · Nginx/HTTPS en IPFire: [ipfire-nginx-letsencrypt.md](ipfire-nginx-letsencrypt.md)  
 **Objetivo:** dejar TIA corriendo como servicio en un contenedor Linux, con las mismas convenciones que después en un VPS.
 
 No implementa features nuevas. Es el “cómo montarlo”.
@@ -348,7 +348,7 @@ En IPFire, Nginx hace de recepción:
 
 - `proxy_pass http://IP-DEL-CT:8000;` para **`/`**, **`/static`**, **`/chat`**, **`/health`**, **`/end`**
 - `proxy_read_timeout` alto (60–120 s; OpenAI puede tardar)
-- HTTPS + nombre (Let’s Encrypt / DynDNS si la IP WAN es dinámica)
+- HTTPS + nombre (Let’s Encrypt / DynDNS si la IP WAN es dinámica) — guía: [ipfire-nginx-letsencrypt.md](ipfire-nginx-letsencrypt.md)
 - **No** publicar el puerto 8000 a Internet; solo 80/443 al IPFire
 
 La UI interna usa la misma raíz (`/`) y logo en `/static/`; no hace falta location extra si todo el tráfico va al CT:8000.
@@ -357,7 +357,7 @@ Websockets no hacen falta para `/chat` ni para la UI estática. Sí harían falt
 
 **Hairpin NAT:** desde la WiFi de casa `https://tia.midominio.com` a veces no anda. Probar desde **4G**.
 
-Detalle conceptual: `docs/staging-produccion-canales.md` sección Proxmox.
+Detalle conceptual: `docs/staging-produccion-canales.md` sección Proxmox. Config concreta de `server_name`, challenge HTTP-01 y Dehydrated: [ipfire-nginx-letsencrypt.md](ipfire-nginx-letsencrypt.md).
 
 ---
 
@@ -409,7 +409,7 @@ En la PC, `pip freeze > requirements.txt` mete todo el venv: transitivas de Grad
 - [ ] `GET /health` desde la LAN
 - [ ] `GET /` abre la UI; dos navegadores = dos charlas en paralelo
 - [ ] Dos `session_id` = dos charlas (curl o UI)
-- [ ] Nginx/HTTPS en IPFire; 8000 no publicado a WAN
+- [ ] Nginx/HTTPS en IPFire ([ipfire-nginx-letsencrypt.md](ipfire-nginx-letsencrypt.md)); 8000 no publicado a WAN
 - [ ] PING: el CT **sale** a `smtp.gmail.com:587` y a `api.openai.com`
 - [ ] CSV de consultas en path persistente; un “Hola” **no** manda mail, sí deja fila
 

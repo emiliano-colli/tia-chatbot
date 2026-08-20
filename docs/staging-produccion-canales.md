@@ -217,7 +217,7 @@ Un solo Nginx adelante (IPFire). Uvicorn debe escuchar en la IP LAN (`0.0.0.0:80
 - Nginx: `server_name` + `proxy_pass http://IP-CT:8000`
 - `proxy_read_timeout` alto (el LLM puede tardar 15–60 s)
 - Websockets solo si usás Gradio; FastAPI `/chat` es HTTP normal
-- Let’s Encrypt + nombre (DynDNS si la IP WAN es dinámica)
+- Let’s Encrypt + nombre (DynDNS si la IP WAN es dinámica) — guía: [ipfire-nginx-letsencrypt.md](ipfire-nginx-letsencrypt.md)
 
 **Desde adentro de casa**
 

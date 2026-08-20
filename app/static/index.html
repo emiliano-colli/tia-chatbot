@@ -156,6 +156,29 @@
       color: var(--accent);
     }
 
+    .bubble.bot .md-section {
+      margin: 0.35em 0 0.5em;
+    }
+
+    .bubble.bot .md-item {
+      font-weight: 600;
+      margin: 0 0 0.25em;
+    }
+
+    .bubble.bot .md-section:first-child .md-item {
+      margin-top: 0;
+    }
+
+    .bubble.bot .md-item::before {
+      content: "• ";
+      color: var(--accent);
+    }
+
+    .bubble.bot .md-section ul {
+      margin: 0.15em 0 0;
+      padding-left: 1.5em;
+    }
+
     .bubble.system {
       align-self: center;
       background: transparent;
@@ -352,6 +375,26 @@
       return i;
     }
 
+    function consumeUl(lines, i, parent) {
+      const ul = document.createElement("ul");
+      let count = 0;
+      while (true) {
+        i = skipBlanks(lines, i);
+        if (i >= lines.length || !isUlLine(lines[i])) {
+          break;
+        }
+        const li = document.createElement("li");
+        appendInline(li, lines[i].replace(/^[-*] /, ""));
+        ul.appendChild(li);
+        i += 1;
+        count += 1;
+      }
+      if (count > 0) {
+        parent.appendChild(ul);
+      }
+      return i;
+    }
+
     function appendInline(parent, text) {
       const tokenRe = /(\*\*[^*]+\*\*)|(https?:\/\/[^\s<]+)/g;
       let last = 0;
@@ -401,33 +444,19 @@
           continue;
         }
         if (isUlLine(lines[i])) {
-          const ul = document.createElement("ul");
-          while (true) {
-            i = skipBlanks(lines, i);
-            if (i >= lines.length || !isUlLine(lines[i])) {
-              break;
-            }
-            const li = document.createElement("li");
-            appendInline(li, lines[i].replace(/^[-*] /, ""));
-            ul.appendChild(li);
-            i += 1;
-          }
-          container.appendChild(ul);
+          i = consumeUl(lines, i, container);
           continue;
         }
         if (isOlLine(lines[i])) {
-          const ol = document.createElement("ol");
-          while (true) {
-            i = skipBlanks(lines, i);
-            if (i >= lines.length || !isOlLine(lines[i])) {
-              break;
-            }
-            const li = document.createElement("li");
-            appendInline(li, lines[i].replace(/^\d+\. /, ""));
-            ol.appendChild(li);
-            i += 1;
-          }
-          container.appendChild(ol);
+          const section = document.createElement("div");
+          section.className = "md-section";
+          const item = document.createElement("p");
+          item.className = "md-item";
+          appendInline(item, lines[i].replace(/^\d+\. /, ""));
+          section.appendChild(item);
+          i += 1;
+          i = consumeUl(lines, i, section);
+          container.appendChild(section);
           continue;
         }
         const paraLines = [];

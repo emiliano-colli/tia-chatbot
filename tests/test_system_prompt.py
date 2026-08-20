@@ -61,6 +61,7 @@ def test_system_prompt_services_with_appointment_rules():
     assert "horario" in prompt.lower()
     assert "no afirmes que no hay whatsapp" in prompt.lower()
     assert "ficha BIO" in prompt or "BIO" in prompt
+    assert "enumeres cada clase" in prompt.lower()
 
 
 def test_knowledge_massages_fiche():

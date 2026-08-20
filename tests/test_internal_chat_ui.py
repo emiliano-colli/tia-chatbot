@@ -75,6 +75,9 @@ def test_get_root_returns_html():
     assert "function isHeadingLine" in response.text
     assert "#{1,6}" in response.text
     assert "function skipBlanks" in response.text
+    assert "md-section" in response.text
+    assert "md-item" in response.text
+    assert 'createElement("ol")' not in response.text
     assert "noopener noreferrer" in response.text
     assert "innerHTML = text" not in response.text
     assert "data.reply" in response.text

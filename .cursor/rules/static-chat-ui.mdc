@@ -6,7 +6,28 @@ alwaysApply: false
 
 # Static chat UI
 
-Single HTML file, no CSS/JS framework. Header / scrollable chat / footer. Chat (`#chat`) grows; header and footer hug their content.
+Single HTML file, no CSS/JS framework. Header / scrollable chat / footer. No CDN scripts.
+
+## Viewport shell
+
+The document MUST NOT scroll. Use `html, body { height: 100%; height: 100dvh; overflow: hidden }`. Header and footer `flex-shrink: 0`. Chat (`#chat`) is the only vertical scroller: `flex: 1; min-height: 0; overflow-y: auto`.
+
+`min-height: 100dvh` on `body` lets the page grow and the browser pan the whole document when the on-screen keyboard opens (header and last bubble disappear). Prefer a fixed viewport height plus `visualViewport` to match the visible area.
+
+```css
+/* ❌ BAD — document can grow; keyboard pans the page */
+body { min-height: 100dvh; }
+#chat { flex: 1; overflow-y: auto; }
+
+/* ✅ GOOD */
+html, body { height: 100%; height: 100dvh; overflow: hidden; }
+header, footer { flex-shrink: 0; }
+#chat { flex: 1; min-height: 0; overflow-y: auto; }
+```
+
+## Bot replies
+
+Render a Markdown subset with `createElement` / `textContent`. MUST NOT assign the model reply to `innerHTML` or `insertAdjacentHTML`. User and system bubbles stay plain text.
 
 ## Mobile chrome
 

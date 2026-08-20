@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
   <title>TIA · TRAMA</title>
   <style>
     :root {
@@ -19,20 +19,23 @@
 
     * { box-sizing: border-box; }
 
-    html, body { overflow-x: hidden; }
+    html, body {
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+    }
 
     body {
       margin: 0;
       font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
       background: var(--bg);
       color: var(--text);
-      min-height: 100vh;
-      min-height: 100dvh;
       display: flex;
       flex-direction: column;
     }
 
     header {
+      flex-shrink: 0;
       background: var(--surface);
       border-bottom: 1px solid var(--border);
       padding: 1rem 1.25rem;
@@ -83,6 +86,7 @@
 
     #chat {
       flex: 1;
+      min-height: 0;
       overflow-y: auto;
       padding: 1.25rem;
       display: flex;
@@ -98,7 +102,6 @@
       padding: 0.75rem 1rem;
       border-radius: 1rem;
       line-height: 1.45;
-      white-space: pre-wrap;
       word-break: break-word;
     }
 
@@ -106,6 +109,7 @@
       align-self: flex-end;
       background: var(--user-bg);
       border-bottom-right-radius: 0.25rem;
+      white-space: pre-wrap;
     }
 
     .bubble.bot {
@@ -115,6 +119,29 @@
       border-bottom-left-radius: 0.25rem;
     }
 
+    .bubble.bot p {
+      margin: 0 0 0.5em;
+    }
+
+    .bubble.bot p:last-child {
+      margin-bottom: 0;
+    }
+
+    .bubble.bot ul,
+    .bubble.bot ol {
+      margin: 0.25em 0 0.5em;
+      padding-left: 1.25em;
+    }
+
+    .bubble.bot li {
+      margin: 0.15em 0;
+    }
+
+    .bubble.bot a {
+      color: var(--accent-dark);
+      overflow-wrap: anywhere;
+    }
+
     .bubble.system {
       align-self: center;
       background: transparent;
@@ -122,9 +149,11 @@
       font-size: 0.9rem;
       text-align: center;
       max-width: 100%;
+      white-space: pre-wrap;
     }
 
     footer {
+      flex-shrink: 0;
       background: var(--surface);
       border-top: 1px solid var(--border);
       padding: 1rem 1.25rem 1.25rem;
@@ -290,12 +319,125 @@
       localStorage.removeItem(STORAGE_KEY);
     }
 
+    function isUlLine(line) {
+      return /^[-*] /.test(line);
+    }
+
+    function isOlLine(line) {
+      return /^\d+\. /.test(line);
+    }
+
+    function appendInline(parent, text) {
+      const tokenRe = /(\*\*[^*]+\*\*)|(https?:\/\/[^\s<]+)/g;
+      let last = 0;
+      let match;
+      while ((match = tokenRe.exec(text)) !== null) {
+        if (match.index > last) {
+          parent.appendChild(document.createTextNode(text.slice(last, match.index)));
+        }
+        if (match[1]) {
+          const strong = document.createElement("strong");
+          strong.textContent = match[1].slice(2, -2);
+          parent.appendChild(strong);
+        } else if (match[2]) {
+          let href = match[2].replace(/[),.;!?]+$/, "");
+          const trailing = match[2].slice(href.length);
+          const a = document.createElement("a");
+          a.href = href;
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          a.textContent = href;
+          parent.appendChild(a);
+          if (trailing) {
+            parent.appendChild(document.createTextNode(trailing));
+          }
+        }
+        last = match.index + match[0].length;
+      }
+      if (last < text.length) {
+        parent.appendChild(document.createTextNode(text.slice(last)));
+      }
+    }
+
+    function renderBotMarkdown(container, text) {
+      const lines = String(text).replace(/\r\n/g, "\n").split("\n");
+      let i = 0;
+      while (i < lines.length) {
+        if (lines[i].trim() === "") {
+          i += 1;
+          continue;
+        }
+        if (isUlLine(lines[i])) {
+          const ul = document.createElement("ul");
+          while (i < lines.length && isUlLine(lines[i])) {
+            const li = document.createElement("li");
+            appendInline(li, lines[i].replace(/^[-*] /, ""));
+            ul.appendChild(li);
+            i += 1;
+          }
+          container.appendChild(ul);
+          continue;
+        }
+        if (isOlLine(lines[i])) {
+          const ol = document.createElement("ol");
+          while (i < lines.length && isOlLine(lines[i])) {
+            const li = document.createElement("li");
+            appendInline(li, lines[i].replace(/^\d+\. /, ""));
+            ol.appendChild(li);
+            i += 1;
+          }
+          container.appendChild(ol);
+          continue;
+        }
+        const paraLines = [];
+        while (
+          i < lines.length &&
+          lines[i].trim() !== "" &&
+          !isUlLine(lines[i]) &&
+          !isOlLine(lines[i])
+        ) {
+          paraLines.push(lines[i]);
+          i += 1;
+        }
+        const p = document.createElement("p");
+        paraLines.forEach((line, idx) => {
+          if (idx > 0) {
+            p.appendChild(document.createElement("br"));
+          }
+          appendInline(p, line);
+        });
+        container.appendChild(p);
+      }
+    }
+
+    function scrollChatToEnd() {
+      chatEl.scrollTop = chatEl.scrollHeight;
+    }
+
+    function syncVisualViewport() {
+      const vv = window.visualViewport;
+      if (vv) {
+        document.body.style.height = vv.height + "px";
+      }
+      scrollChatToEnd();
+    }
+
+    function scheduleScrollToEnd() {
+      scrollChatToEnd();
+      requestAnimationFrame(scrollChatToEnd);
+      setTimeout(scrollChatToEnd, 250);
+    }
+
     function appendBubble(text, role) {
       const div = document.createElement("div");
       div.className = "bubble " + role;
-      div.textContent = text;
+      if (role === "bot") {
+        renderBotMarkdown(div, text);
+      } else {
+        div.textContent = text;
+      }
       chatEl.appendChild(div);
-      chatEl.scrollTop = chatEl.scrollHeight;
+      scheduleScrollToEnd();
     }
 
     function setConsultaId(id) {
@@ -311,7 +453,9 @@
     }
 
     function resetUi(message) {
-      chatEl.innerHTML = "";
+      while (chatEl.firstChild) {
+        chatEl.removeChild(chatEl.firstChild);
+      }
       setConsultaId(null);
       if (message) {
         appendBubble(message, "system");
@@ -387,6 +531,13 @@
     });
 
     newChatBtn.addEventListener("click", startNewChat);
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", syncVisualViewport);
+      window.visualViewport.addEventListener("scroll", syncVisualViewport);
+      syncVisualViewport();
+    }
+    inputEl.addEventListener("focus", scheduleScrollToEnd);
 
     resetUi();
     inputEl.focus();

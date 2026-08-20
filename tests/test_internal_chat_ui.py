@@ -67,6 +67,15 @@ def test_get_root_returns_html():
         "Preguntame sobre clases de yoga, entrenamiento funcional, "
         "talleres, servicios de salud, bienestar y más 🌿"
     ) in response.text
+    assert "interactive-widget=resizes-content" in response.text
+    assert "visualViewport" in response.text
+    assert "min-height: 0" in response.text
+    assert "function renderBotMarkdown" in response.text
+    assert "noopener noreferrer" in response.text
+    assert "innerHTML = text" not in response.text
+    assert "data.reply" in response.text
+    assert "innerHTML = data.reply" not in response.text
+    assert "div.innerHTML" not in response.text
 
 
 def test_chat_farewell_via_api():

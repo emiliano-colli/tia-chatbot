@@ -9,6 +9,7 @@ if str(ROOT) not in sys.path:
 
 from src.notifications.ping import (
     SessionSummary,
+    _SUMMARY_SYSTEM_PROMPT,
     build_session_summary,
     format_ping_email,
 )
@@ -48,6 +49,35 @@ def _emilio_menu_history():
         {"role": "assistant", "content": "Gracias. ¿Tenés apto médico?"},
         {"role": "user", "content": "si lo tengo"},
         {"role": "assistant", "content": "Listo para inscripción Yoga Postparto."},
+    ]
+
+
+def _yoga_prices_history():
+    return [
+        {"role": "assistant", "content": "¡Hola! 😊 ¿En qué puedo ayudarte hoy?"},
+        {"role": "user", "content": "Hola"},
+        {"role": "assistant", "content": "¡Hola! 😊 ¿En qué puedo ayudarte hoy?"},
+        {"role": "user", "content": "tienen clases de yoga ?"},
+        {
+            "role": "assistant",
+            "content": (
+                "Sí, Yoga Prenatal, Yoga Postparto y Hatha Yoga. "
+                "Si necesitás horarios, precios o requisitos, decime."
+            ),
+        },
+        {"role": "user", "content": "precios"},
+        {
+            "role": "assistant",
+            "content": (
+                "Precios de yoga. Si te interesa inscribirte, "
+                "proporcioname tu nombre y teléfono."
+            ),
+        },
+        {"role": "user", "content": "emiliano 1167462412"},
+        {
+            "role": "assistant",
+            "content": "Gracias, Emiliano. El equipo puede contactarte.",
+        },
     ]
 
 
@@ -118,6 +148,55 @@ def test_llm_summary_name_phone_together_and_menu_interest():
     assert "solicitó inscripción" in body
     assert "Usuario: Emiliano 1167462412" in body
     assert "Usuario: 8" in body
+
+
+def test_llm_null_interest_filled_from_yoga_keyword():
+    history = _yoga_prices_history()
+    client = _mock_llm_client(
+        {
+            "nombre": "Emiliano",
+            "telefono": "1167462412",
+            "intereses": None,
+        }
+    )
+    summary = build_session_summary(history, client=client)
+
+    assert summary.name == "Emiliano"
+    assert "1167462412" in summary.phone
+    assert "yoga" in summary.interests.lower()
+    assert "no detectado" not in summary.interests.lower()
+    assert "solicitó inscripción" not in summary.interests.lower()
+    assert "solicitó turno" not in summary.interests.lower()
+
+
+def test_llm_specific_interest_not_overwritten_by_keyword():
+    history = [
+        {"role": "user", "content": "tienen yoga ?"},
+        {"role": "assistant", "content": "Sí, Yoga Postparto..."},
+        {
+            "role": "user",
+            "content": "me llamo Ana 1199998888, me quiero inscribir al postparto",
+        },
+        {"role": "assistant", "content": "Gracias Ana"},
+    ]
+    client = _mock_llm_client(
+        {
+            "nombre": "Ana",
+            "telefono": "1199998888",
+            "intereses": "Yoga Postparto — solicitó inscripción",
+        }
+    )
+    summary = build_session_summary(history, client=client)
+    assert summary.interests == "Yoga Postparto — solicitó inscripción"
+
+
+def test_summary_prompt_treats_informational_interest():
+    prompt = _SUMMARY_SYSTEM_PROMPT.lower()
+    assert "tienen clases de yoga" in prompt
+    assert "precios" in prompt
+    assert "familia" in prompt
+    assert "no hace falta menú" in prompt
+    assert "consulta solo informativa" in prompt
 
 
 def test_llm_summary_marks_appointment_request():

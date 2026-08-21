@@ -37,14 +37,17 @@ Sos un extractor de datos de una conversación entre un usuario y TIA (asistente
 A partir del diálogo, devolvé SOLO un JSON con estas claves:
 - "nombre": nombre de la persona interesada, o null si no aparece
 - "telefono": teléfono de contacto, o null si no aparece
-- "intereses": actividad/servicio de interés (si eligió por número de menú, resolvé el nombre de la actividad), o null si no se puede determinar
+- "intereses": actividad, servicio o familia de interés, o null solo si el diálogo no nombra ninguna
 
 Reglas:
 - Usá únicamente información del diálogo; no inventes.
 - Nombre y teléfono pueden venir en el mismo mensaje (ej. "Emiliano 1167462412").
+- Preguntar si hay una actividad (ej. "tienen clases de yoga") cuenta como interés. No hace falta menú numérico ni pedido de inscripción.
+- Pedir precios, horarios o requisitos de lo ya hablado cuenta como interés, aunque el mensaje sea una sola palabra (ej. "precios").
+- Si TIA listó varias variantes de una familia (ej. Yoga Prenatal, Postparto y Hatha) y el usuario no eligió una, en "intereses" poné la familia (ej. "yoga" o "clases de yoga"), no null.
 - Si el usuario pidió inscribirse a una actividad, en "intereses" incluí la actividad y la marca "solicitó inscripción" (ej. "Yoga Postparto — solicitó inscripción").
 - Si el usuario pidió turno/reserva de un servicio, en "intereses" incluí el servicio y la marca "solicitó turno" (ej. "Masaje — solicitó turno").
-- No asumas que la inscripción o el turno ya fueron confirmados por TIA; solo registrá la solicitud si el diálogo la muestra.
+- No asumas que la inscripción o el turno ya fueron confirmados por TIA; solo registrá la solicitud si el diálogo la muestra. En una consulta solo informativa no marques inscripción ni turno.
 """
 
 
@@ -65,15 +68,41 @@ class SessionSummary:
 
 
 _MISSING_CONTACT = frozenset(
-    {"", "no provisto", "sin identificar", "null", "none", "n/a"}
+    {
+        "",
+        "no provisto",
+        "sin identificar",
+        "null",
+        "none",
+        "n/a",
+        "no se puede determinar",
+    }
 )
 _MISSING_INTEREST = frozenset(
-    {"", "no provisto", "sin identificar", "ver log / no detectado", "null", "none", "n/a"}
+    {
+        "",
+        "no provisto",
+        "sin identificar",
+        "ver log / no detectado",
+        "null",
+        "none",
+        "n/a",
+        "no se puede determinar",
+        "no detectado",
+    }
 )
 
 
 def _is_blank(value: str | None, empty: frozenset[str]) -> bool:
-    return (value or "").strip().lower() in empty
+    return (value or "").strip().lower().rstrip(".") in empty
+
+
+def _coalesce_field(llm_value: str, heuristic_value: str, empty: frozenset[str]) -> str:
+    if not _is_blank(llm_value, empty):
+        return llm_value
+    if not _is_blank(heuristic_value, empty):
+        return heuristic_value
+    return llm_value
 
 
 def has_contact(summary: SessionSummary) -> bool:
@@ -175,26 +204,37 @@ def _summarize_with_llm(history: list, client) -> dict | None:
 
 
 def build_session_summary(history: list, client=None) -> SessionSummary:
-    """Arma el resumen PING. Si hay client OpenAI, intenta LLM y cae a heurística."""
-    dialog = _dialog_messages(history)
-    log = _format_log(dialog)
+    """Arma el resumen PING. LLM primero; campos vacíos se completan con heurística."""
+    heuristic = _build_session_summary_heuristic(history)
 
     if client is not None:
         try:
             data = _summarize_with_llm(history, client)
             if data is not None:
                 return SessionSummary(
-                    name=_normalize_field(data.get("nombre"), "No provisto"),
-                    phone=_normalize_field(data.get("telefono"), "No provisto"),
-                    interests=_normalize_field(
-                        data.get("intereses"), "Ver log / no detectado"
+                    name=_coalesce_field(
+                        _normalize_field(data.get("nombre"), "No provisto"),
+                        heuristic.name,
+                        _MISSING_CONTACT,
                     ),
-                    log=log,
+                    phone=_coalesce_field(
+                        _normalize_field(data.get("telefono"), "No provisto"),
+                        heuristic.phone,
+                        _MISSING_CONTACT,
+                    ),
+                    interests=_coalesce_field(
+                        _normalize_field(
+                            data.get("intereses"), "Ver log / no detectado"
+                        ),
+                        heuristic.interests,
+                        _MISSING_INTEREST,
+                    ),
+                    log=heuristic.log,
                 )
         except Exception as exc:
             logger.error("Fallo resumen LLM de sesión; uso heurística: %s", exc)
 
-    return _build_session_summary_heuristic(history)
+    return heuristic
 
 
 def format_ping_email(summary: SessionSummary) -> tuple[str, str]:

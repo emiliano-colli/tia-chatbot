@@ -27,7 +27,6 @@ vital, movida vital para +60.
 **Servicios:** masajes, kinesiología, asistencia psicológica, 
 Consultorio de Lactancia (Atención de Demanda Espontánea y Turnos Programados)
 
-
 **Eventos / talleres:** recursos para el parto y preparación para una 
 lactancia natural exitosa.
 
@@ -81,7 +80,7 @@ TRAMA es un espacio enfocado en el movimiento consciente, acompañando cada proc
 
 El espacio tiene **cuatro** salones. No decir que hay solo dos.
 
-**Actividades grupales** (clases, talleres y eventos) — pueden usarse
+**Actividades** (clases, talleres y eventos) — pueden usarse
 en simultáneo:
 - **Sala Tierra**
   - Foto: /static/salones/tierra.jpg

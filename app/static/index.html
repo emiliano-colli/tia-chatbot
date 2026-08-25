@@ -395,27 +395,44 @@
       return i;
     }
 
+    function isSafeHref(href) {
+      return /^https?:\/\//i.test(href) || href.startsWith("/static/");
+    }
+
+    function appendSafeLink(parent, href, label) {
+      const a = document.createElement("a");
+      a.href = href;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.textContent = label;
+      parent.appendChild(a);
+    }
+
     function appendInline(parent, text) {
-      const tokenRe = /(\*\*[^*]+\*\*)|(https?:\/\/[^\s<]+)/g;
+      const tokenRe =
+        /\[([^\]]+)\]\(([^)]+)\)|(\*\*[^*]+\*\*)|(https?:\/\/[^\s<]+)|(\/static\/[^\s<]+)/g;
       let last = 0;
       let match;
       while ((match = tokenRe.exec(text)) !== null) {
         if (match.index > last) {
           parent.appendChild(document.createTextNode(text.slice(last, match.index)));
         }
-        if (match[1]) {
+        if (match[1] !== undefined) {
+          const href = match[2];
+          if (isSafeHref(href)) {
+            appendSafeLink(parent, href, match[1]);
+          } else {
+            parent.appendChild(document.createTextNode(match[0]));
+          }
+        } else if (match[3]) {
           const strong = document.createElement("strong");
-          strong.textContent = match[1].slice(2, -2);
+          strong.textContent = match[3].slice(2, -2);
           parent.appendChild(strong);
-        } else if (match[2]) {
-          let href = match[2].replace(/[),.;!?]+$/, "");
-          const trailing = match[2].slice(href.length);
-          const a = document.createElement("a");
-          a.href = href;
-          a.target = "_blank";
-          a.rel = "noopener noreferrer";
-          a.textContent = href;
-          parent.appendChild(a);
+        } else {
+          const raw = match[4] || match[5];
+          let href = raw.replace(/[),.;!?]+$/, "");
+          const trailing = raw.slice(href.length);
+          appendSafeLink(parent, href, href);
           if (trailing) {
             parent.appendChild(document.createTextNode(trailing));
           }

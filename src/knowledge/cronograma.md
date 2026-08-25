@@ -10,8 +10,9 @@ Estacionamiento : En los alrededores hay mucho espacio de estacionamiento.
 
 Dentro del espacio se desarrollan:
 - Actividades presenciales grupales o individuales, con frecuencia regular, 
-  guiadas por profesionales.
-- Servicios puntuales con cita previa.
+  guiadas por profesionales (clases, talleres y eventos).
+- Servicios puntuales: en general con cita previa. El Consultorio de
+  Lactancia atiende demanda espontánea y también turnos programados.
 - Eventos o talleres enfocados en necesidades de la maternidad, orientados 
   a recursos concretos.
 
@@ -23,8 +24,9 @@ conciencia y cuidado por el otro.
 movimiento integrado, entrenamiento funcional (pre y post parto), movida 
 vital, movida vital para +60.
 
-**Servicios:** masajes, kinesiología, asistencia psicológica, atención de 
-casos de lactancia en consultorio.
+**Servicios:** masajes, kinesiología, asistencia psicológica, 
+Consultorio de Lactancia (Atención de Demanda Espontánea y Turnos Programados)
+
 
 **Eventos / talleres:** recursos para el parto y preparación para una 
 lactancia natural exitosa.
@@ -75,14 +77,50 @@ TRAMA es un espacio enfocado en el movimiento consciente, acompañando cada proc
 
 ---
 
+# SALONES
+
+El espacio tiene **cuatro** salones. No decir que hay solo dos.
+
+**Actividades grupales** (clases, talleres y eventos) — pueden usarse
+en simultáneo:
+- **Sala Tierra**
+  - Foto: /static/salones/tierra.jpg
+  - Video: /static/salones/tierra.mp4
+- **Sala Aire**
+  - Foto: /static/salones/aire.jpg
+  - Video: /static/salones/aire.mp4
+
+**Servicios** — pueden usarse en simultáneo:
+- **Consultorio** — asistencia psicológica; Consultorio de Lactancia
+  (atención de demanda espontánea y turnos programados).
+  - Foto: /static/salones/consultorio.jpg
+  - Video: /static/salones/consultorio.mp4
+- **Sala Calma** — masajes y kinesiología.
+  - Foto: /static/salones/calma.jpg
+  - Video: /static/salones/calma.mp4
+
+No asignar una actividad grupal a un salón concreto si la ficha no lo
+indica (default Tierra / Aire según la agenda). Los servicios de arriba
+sí tienen salón fijo. Clases virtuales no tienen salón ni foto/video.
+
+Al citar Foto/Video en una respuesta: primero la info útil, después el
+nombre del salón, después una línea (ejemplo de forma, con los paths
+de ese salón):
+`[foto](/static/salones/aire.jpg) · [recorrido](/static/salones/aire.mp4)`
+Labels exactamente `foto` y `recorrido` (no repetir el nombre del
+salón). Si falta una línea Foto o Video, no inventar.
+
+---
+
 # AGENDA DE ACTIVIDADES GRUPALES
 
 > **Ubicación:** Garibaldi 170, Lomas de Zamora
 > **Nota general:** Todas las actividades requieren cita previa.
-> **Salones:** El espacio cuenta con dos salas —Sala Tierra y Sala Aire—,
-> por lo que pueden desarrollarse distintas actividades en simultáneo.
-> Por defecto, todas las actividades se dictan en **Sala Tierra**,
-> excepto donde se indique explícitamente **Sala Aire**.
+> **Salones:** Clases, talleres y eventos se desarrollan en **Sala Tierra**
+> y **Sala Aire** (pueden usarse en simultáneo). Por defecto, todas las
+> actividades se dictan en **Sala Tierra**, excepto donde se indique
+> explícitamente **Sala Aire**. Consultorio y Sala Calma son para
+> servicios, no para esta agenda.
 
 ---
 
@@ -345,10 +383,15 @@ Práctica para todos los niveles: asanas, respiración y relajación final.
 # AGENDA DE SERVICIOS
 
 > **Ubicación:** Garibaldi 170, Lomas de Zamora
-> **Nota general:** Todos los servicios y/o sesiones requieren cita previa.
-> **Salones:** Hay dos salas para servicios: Espacio de Consulta y Orientación
-> (**Consultorio**) y Centro de Bienestar (**Calma**). Pueden usarse en
-> simultáneo.
+> **Nota general:** Los servicios se coordinan con cita previa, salvo el
+> Consultorio de Lactancia, que atiende demanda espontánea y también
+> turnos programados.
+> **Salones:** Los servicios se desarrollan en **Consultorio** y
+> **Sala Calma** (pueden usarse en simultáneo).
+> - **Consultorio:** asistencia psicológica; Consultorio de Lactancia
+>   (demanda espontánea y turnos programados).
+> - **Sala Calma:** masajes y kinesiología.
+> Sala Tierra y Sala Aire son para actividades grupales, no para esta agenda.
 
 ---
 

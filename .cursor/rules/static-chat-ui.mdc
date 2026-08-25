@@ -27,7 +27,7 @@ header, footer { flex-shrink: 0; }
 
 ## Bot replies
 
-Render a Markdown subset with `createElement` / `textContent`. MUST NOT assign the model reply to `innerHTML` or `insertAdjacentHTML`. User and system bubbles stay plain text.
+Render a Markdown subset with `createElement` / `textContent`. MUST NOT assign the model reply to `innerHTML` or `insertAdjacentHTML`. User and system bubbles stay plain text. Autolink `http(s)://` and same-origin `/static/…` paths. Parse `[label](href)` and show the label; accept href only if it is `http(s):` or starts with `/static/` (otherwise leave the match as plain text).
 
 ## Mobile chrome
 

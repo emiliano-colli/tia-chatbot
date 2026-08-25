@@ -62,6 +62,11 @@ def test_system_prompt_services_with_appointment_rules():
     assert "no afirmes que no hay whatsapp" in prompt.lower()
     assert "ficha BIO" in prompt or "BIO" in prompt
     assert "enumeres cada clase" in prompt.lower()
+    assert "/static/salones/" in prompt
+    assert "Clases virtuales" in prompt or "clases virtuales" in prompt.lower()
+    assert "[foto](" in prompt
+    assert "[recorrido](" in prompt
+    assert "foto · recorrido" in prompt or " · " in prompt
 
 
 def test_knowledge_massages_fiche():
@@ -76,6 +81,55 @@ def test_knowledge_massages_fiche():
     assert "WhatsApp de consultas" in knowledge
     assert "+54 11 6956-6115" in knowledge
     assert "Instagram/Facebook de esta base) son complemento" in knowledge or "son complemento" in knowledge
+
+
+def test_knowledge_four_salons_split_by_use():
+    knowledge = load_knowledge()
+    assert "# SALONES" in knowledge
+    assert "cuatro" in knowledge.lower()
+    assert "Sala Tierra" in knowledge
+    assert "Sala Aire" in knowledge
+    assert "Consultorio" in knowledge
+    assert "Sala Calma" in knowledge
+    assert "asistencia psicológica" in knowledge.lower()
+    assert "kinesiolog" in knowledge.lower()
+    assert "demanda espontánea" in knowledge.lower()
+    assert "turnos programados" in knowledge.lower()
+    assert "Hay dos salas para servicios" not in knowledge
+    assert "El espacio cuenta con dos salas" not in knowledge
+    salones = knowledge.split("# SALONES", 1)[1].split("# AGENDA DE ACTIVIDADES GRUPALES", 1)[0]
+    assert "Consultorio" in salones
+    assert "asistencia psicológica" in salones.lower()
+    assert "Lactancia" in salones
+    assert "Sala Calma" in salones
+    assert "masajes" in salones.lower()
+    assert "kinesiolog" in salones.lower()
+    for slug in ("tierra", "aire", "calma", "consultorio"):
+        assert f"/static/salones/{slug}.jpg" in salones
+        assert f"/static/salones/{slug}.mp4" in salones
+    assert "[foto](" in salones
+    assert "[recorrido](" in salones
+
+
+def test_knowledge_drops_static_media_line_if_file_missing(tmp_path, monkeypatch):
+    from src.knowledge import loader as knowledge_loader
+
+    monkeypatch.setattr(knowledge_loader, "STATIC_ROOT", tmp_path)
+    assert knowledge_loader._line_keeps_existing_static_files("sin media") is True
+    assert (
+        knowledge_loader._line_keeps_existing_static_files(
+            "  - Foto: /static/salones/no-existe.jpg"
+        )
+        is False
+    )
+    (tmp_path / "salones").mkdir()
+    (tmp_path / "salones" / "tierra.jpg").write_bytes(b"x")
+    assert (
+        knowledge_loader._line_keeps_existing_static_files(
+            "  - Foto: /static/salones/tierra.jpg"
+        )
+        is True
+    )
 
 
 def test_knowledge_whatsapp_primary_contact_and_caro_bio():

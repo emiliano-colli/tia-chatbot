@@ -60,7 +60,7 @@ After the first successful `POST /chat` of a session, the internal chat page MUS
 - **THEN** a small muted `#` + id label is visible without requiring horizontal pan on a phone viewport
 
 ### Requirement: Assistant bubbles render a safe Markdown subset
-Las burbujas del asistente MUST mostrar un subset de Markdown de forma legible: párrafos/saltos de línea, negrita `**texto**`, headings `#`–`######` (sin mostrar los numerales; con marca de sección tipo viñeta), listas con `- ` / `* `, líneas que empiezan con `1. ` / `2. ` como **títulos de bloque con viñeta** (no como lista ordenada HTML), y URLs `http://` / `https://` como enlaces. MUST NOT usar `<ol>` (marcadores 1, 2, 3 del navegador) para esas líneas numeradas. Si después de un `1.` vienen viñetas `-`, MUST mostrarlas como sublista indentada de ese bloque. MUST construir el DOM con nodos y `textContent`. MUST NOT asignar el reply crudo a `innerHTML`. Las burbujas de usuario y de sistema MUST seguir como texto plano. MUST NOT cargar librerías Markdown ni sanitizers por CDN.
+Las burbujas del asistente MUST mostrar un subset de Markdown de forma legible: párrafos/saltos de línea, negrita `**texto**`, headings `#`–`######` (sin mostrar los numerales; con marca de sección tipo viñeta), listas con `- ` / `* `, líneas que empiezan con `1. ` / `2. ` como **títulos de bloque con viñeta** (no como lista ordenada HTML), URLs `http://` / `https://` **y paths del mismo origen `/static/…`** como enlaces, y enlaces Markdown `[label](href)` cuyo **texto visible es el `label`**. El `href` de un `[label](href)` MUST aceptarse solo si es `http://`, `https://` o un path que empieza con `/static/`; cualquier otro esquema MUST quedar como texto plano. MUST NOT usar `<ol>` (marcadores 1, 2, 3 del navegador) para esas líneas numeradas. Si después de un `1.` vienen viñetas `-`, MUST mostrarlas como sublista indentada de ese bloque. MUST construir el DOM con nodos y `textContent`. MUST NOT asignar el reply crudo a `innerHTML`. Las burbujas de usuario y de sistema MUST seguir como texto plano. MUST NOT cargar librerías Markdown ni sanitizers por CDN.
 
 #### Scenario: Bot reply shows bold and a list
 - **WHEN** el asistente responde con negrita Markdown y una lista con viñetas
@@ -69,6 +69,18 @@ Las burbujas del asistente MUST mostrar un subset de Markdown de forma legible: 
 #### Scenario: Bot reply autolinks https URLs
 - **WHEN** el reply del asistente incluye una URL `https://`
 - **THEN** esa URL se muestra como enlace visitables (p. ej. `target="_blank"`)
+
+#### Scenario: Bot reply autolinks same-origin static paths
+- **WHEN** el reply del asistente incluye un path `/static/salones/tierra.jpg` (u otro archivo bajo `/static/`)
+- **THEN** ese path se muestra como enlace visitable en el mismo origen (p. ej. `target="_blank"`)
+
+#### Scenario: Bot reply shows markdown link labels
+- **WHEN** el reply incluye `[foto](/static/salones/aire.jpg) · [recorrido](/static/salones/aire.mp4)`
+- **THEN** la burbuja muestra dos enlaces cuyo texto visible es `foto` y `recorrido` (no las rutas), con `href` a esos paths, `target="_blank"`
+
+#### Scenario: Unsafe markdown href stays plain text
+- **WHEN** el reply incluye `[x](javascript:alert(1))` u otro href que no es `http(s):` ni `/static/`
+- **THEN** no se crea un enlace navegable a ese href; el fragmento se muestra como texto
 
 #### Scenario: User bubble stays plain text
 - **WHEN** el usuario envía un mensaje que contiene `**asteriscos**`

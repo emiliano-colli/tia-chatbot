@@ -78,11 +78,25 @@ def test_get_root_returns_html():
     assert "md-section" in response.text
     assert "md-item" in response.text
     assert 'createElement("ol")' not in response.text
+    assert "/static/" in response.text
     assert "noopener noreferrer" in response.text
+    assert "function isSafeHref" in response.text
+    assert r"\[([^\]]+)\]\(([^)]+)\)" in response.text
     assert "innerHTML = text" not in response.text
     assert "data.reply" in response.text
     assert "innerHTML = data.reply" not in response.text
     assert "div.innerHTML" not in response.text
+
+
+def test_salon_placeholder_media_are_served():
+    client = TestClient(app)
+    for slug in ("tierra", "aire", "calma", "consultorio"):
+        photo = client.get(f"/static/salones/{slug}.jpg")
+        video = client.get(f"/static/salones/{slug}.mp4")
+        assert photo.status_code == 200, slug
+        assert video.status_code == 200, slug
+        assert photo.headers.get("content-type", "").startswith("image/")
+        assert "video/mp4" in video.headers.get("content-type", "")
 
 
 def test_chat_farewell_via_api():

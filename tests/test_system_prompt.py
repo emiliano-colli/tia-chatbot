@@ -67,6 +67,10 @@ def test_system_prompt_services_with_appointment_rules():
     assert "[foto](" in prompt
     assert "[recorrido](" in prompt
     assert "foto · recorrido" in prompt or " · " in prompt
+    assert "Sala Calma" in prompt
+    assert "[foto](/static/salones/calma.jpg)" in prompt
+    assert "[recorrido](/static/salones/calma.mp4)" in prompt
+    assert "aunque no hayan preguntado" in prompt.lower() or "no hace falta que pregunten" in prompt.lower()
 
 
 def test_knowledge_massages_fiche():

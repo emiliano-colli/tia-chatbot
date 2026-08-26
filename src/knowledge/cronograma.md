@@ -102,9 +102,10 @@ No asignar una actividad grupal a un salón concreto si la ficha no lo
 indica (default Tierra / Aire según la agenda). Los servicios de arriba
 sí tienen salón fijo. Clases virtuales no tienen salón ni foto/video.
 
-Al citar Foto/Video en una respuesta: primero la info útil, después el
-nombre del salón, después una línea (ejemplo de forma, con los paths
-de ese salón):
+Al citar Foto/Video: usalo también al informar el servicio o la clase
+(precios, tipos, turno), no solo si preguntan el salón. Primero la
+info útil, después el nombre del salón, después una línea (ejemplo
+de forma, con los paths de ese salón):
 `[foto](/static/salones/aire.jpg) · [recorrido](/static/salones/aire.mp4)`
 Labels exactamente `foto` y `recorrido` (no repetir el nombre del
 salón). Si falta una línea Foto o Video, no inventar.

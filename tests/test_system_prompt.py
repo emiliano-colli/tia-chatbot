@@ -71,6 +71,10 @@ def test_system_prompt_services_with_appointment_rules():
     assert "[foto](/static/salones/calma.jpg)" in prompt
     assert "[recorrido](/static/salones/calma.mp4)" in prompt
     assert "aunque no hayan preguntado" in prompt.lower() or "no hace falta que pregunten" in prompt.lower()
+    assert "además" in prompt.lower()
+    assert "WhatsApp de una profesional" in prompt or "whatsapp de una profesional" in prompt.lower()
+    assert "turno programado" in prompt.lower()
+    assert "demanda" in prompt.lower() and "espontánea" in prompt.lower()
 
 
 def test_knowledge_massages_fiche():
@@ -85,6 +89,33 @@ def test_knowledge_massages_fiche():
     assert "WhatsApp de consultas" in knowledge
     assert "+54 11 6956-6115" in knowledge
     assert "Instagram/Facebook de esta base) son complemento" in knowledge or "son complemento" in knowledge
+
+
+def test_knowledge_lactancia_fiche():
+    knowledge = load_knowledge()
+    assert "## 2. Consultorio de Lactancia" in knowledge
+    assert "### Disponibilidad y reserva" in knowledge
+    assert "08:00 a 12:00" in knowledge
+    assert "10:00 a 13:00" in knowledge
+    assert "14:00 a 18:00" in knowledge
+    assert "Natalia" in knowledge
+    assert "+54 11 3198-9930" in knowledge
+    assert "wa.me/541131989930" in knowledge
+    assert "+54 11 6956-6115" in knowledge
+    assert "wa.me/541169566115" in knowledge
+    assert "$50.000" in knowledge
+    assert "seña del 50%" in knowledge
+    assert "turno programado" in knowledge.lower()
+    assert "demanda espontánea" in knowledge.lower()
+    assert "Consultorio" in knowledge
+    assert "@trama.lomas" not in knowledge
+    servicios = knowledge.split("# AGENDA DE SERVICIOS", 1)[1]
+    lactancia = servicios.split("## 2. Consultorio de Lactancia", 1)[1]
+    assert "Natalia no es el único canal" in lactancia or "no reemplaza" in lactancia.lower()
+    assert "recomendable" in lactancia.lower()
+    assert "no un requisito" in lactancia.lower() or "no requiere seña" in lactancia.lower()
+    equipo = knowledge.split("# EQUIPO", 1)[1].split("# SALONES", 1)[0]
+    assert "### Natalia" not in equipo
 
 
 def test_knowledge_four_salons_split_by_use():

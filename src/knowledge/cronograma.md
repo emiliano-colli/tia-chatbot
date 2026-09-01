@@ -430,3 +430,53 @@ Precio único por sesión para cualquiera de los tipos listados (ver Valores).
 ### Valores
 - 1 sesión de masajes (cualquier tipo listado arriba), duración ~1 hora: **$50.000**
 - Para reservar el turno se solicita una **seña del 50%**.
+
+---
+
+## 2. Consultorio de Lactancia: Atención de Demanda Espontánea y Turnos Programados
+
+### Descripción
+Las dudas, el dolor o las dificultades con la lactancia muchas veces
+no pueden esperar. En TRAMA Lomas hay un espacio flexible para
+acompañarte con información, respeto y sostén: no hace falta
+atravesarlo sola.
+
+Podés acercarte de forma espontánea en los horarios de atención,
+o acordar la consulta con anticipación.
+
+El espacio está abierto en el embarazo, en los primeros días
+después del nacimiento y en cualquier momento de la lactancia.
+Las mamás pueden venir acompañadas por su pareja, un familiar
+o quien elijan como red de sostén.
+
+### Requisitos
+- No hay requisitos formales; informar cualquier dolencia previa o dato relevante.
+
+### Profesionales
+- Natalia — Consultorio de Lactancia (martes, jueves y viernes).
+  WhatsApp: +54 11 3198-9930 (https://wa.me/541131989930)
+- Carolina Losada ("Caro") — miércoles, y consultas generales cualquier día.
+  WhatsApp de TRAMA: +54 11 6956-6115 (https://wa.me/541169566115)
+
+### Disponibilidad y reserva
+- **Lugar:** Consultorio.
+- **Días y horarios:**
+  - Martes y jueves, 08:00 a 12:00 (Natalia)
+  - Miércoles, 10:00 a 13:00 (Carolina)
+  - Viernes, 14:00 a 18:00 (Natalia)
+  - Se irán sumando horarios si hace falta.
+- **Modalidad:** demanda espontánea y turnos programados.
+- **Aviso:** podés venir en horario de atención sin turno. Avisar por
+  WhatsApp es recomendable, no un requisito.
+- **Canal:** para avisar, consultar o programar, escribinos por WhatsApp
+  según el día (números en Profesionales). El WhatsApp general de TRAMA
+  +54 11 6956-6115 (https://wa.me/541169566115), lunes a viernes 09 a 21 hs,
+  sigue disponible cualquier día. Natalia no es el único canal.
+- **Formalización:** el turno programado lo confirma el equipo de TRAMA.
+  El WhatsApp de Natalia es adicional en sus días; no reemplaza al de TRAMA.
+  Redes de TRAMA (Instagram/Facebook de esta base) son complemento.
+
+### Valores
+- 1 consulta, duración ~1 hora: **$50.000**
+- Para reservar el **turno programado** se solicita una **seña del 50%**.
+  La demanda espontánea en horario de atención no requiere seña.

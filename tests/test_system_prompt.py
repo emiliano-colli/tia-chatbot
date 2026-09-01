@@ -180,3 +180,25 @@ def test_knowledge_whatsapp_primary_contact_and_caro_bio():
     assert "Partera, Profe de Yoga, Doula y Puericultora" in knowledge
     assert "movimiento consciente" in knowledge
     assert "Bio pendiente" not in knowledge
+
+
+def test_knowledge_chi_kung_fiche_and_marta_bio():
+    knowledge = load_knowledge()
+    assert "chi kung terapéutico" in knowledge.lower()
+    assert "## 11. Chi Kung Terapéutico" in knowledge
+    assert "Marta Pistasoli" in knowledge
+    assert "Sala Tierra" in knowledge
+    assert "16:30–17:30" in knowledge or "16:30-17:30" in knowledge
+    assert "09:00–10:00" in knowledge or "09:00-10:00" in knowledge
+    assert "4 clases (1x/semana): $50.000" in knowledge
+    assert "8 clases (2x/semana): $78.000" in knowledge
+    assert "Clase suelta/prueba: $15.000" in knowledge
+    assert "Chi-Kung" in knowledge
+    assert "Qi Gong" in knowledge
+    assert "@marti_chikungterapeutico" not in knowledge.split("## 11. Chi Kung Terapéutico", 1)[1].split("# AGENDA DE SERVICIOS", 1)[0]
+    equipo = knowledge.split("# EQUIPO", 1)[1].split("# SALONES", 1)[0]
+    assert equipo.find('Carolina Losada ("Caro")') < equipo.find("### Marta Pistasoli")
+    assert "Dicta Chi Kung Terapéutico" in equipo
+    assert "https://www.instagram.com/marti_chikungterapeutico/" in equipo
+    assert "Soy Marta" not in equipo
+    assert "WhatsApp" not in equipo.split("### Marta Pistasoli", 1)[1]

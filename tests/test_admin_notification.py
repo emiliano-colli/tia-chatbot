@@ -10,6 +10,8 @@ if str(ROOT) not in sys.path:
 from src.notifications.ping import (
     SessionSummary,
     _SUMMARY_SYSTEM_PROMPT,
+    _ACTIVITY_KEYWORDS,
+    _build_session_summary_heuristic,
     build_session_summary,
     format_ping_email,
 )
@@ -167,6 +169,41 @@ def test_llm_null_interest_filled_from_yoga_keyword():
     assert "no detectado" not in summary.interests.lower()
     assert "solicitó inscripción" not in summary.interests.lower()
     assert "solicitó turno" not in summary.interests.lower()
+
+
+def test_heuristic_detects_chi_kung_spellings():
+    assert "chi kung" in _ACTIVITY_KEYWORDS
+    assert "chi-kung" in _ACTIVITY_KEYWORDS
+    assert "qigong" in _ACTIVITY_KEYWORDS
+    assert "chi" not in _ACTIVITY_KEYWORDS
+    for phrase, expected in (
+        ("tienen chi kung?", "chi kung"),
+        ("quiero chi-kung terapeutico", "chi-kung"),
+        ("info de qigong", "qigong"),
+    ):
+        summary = _build_session_summary_heuristic(
+            [{"role": "user", "content": phrase}]
+        )
+        assert expected in summary.interests.lower()
+        assert "no detectado" not in summary.interests.lower()
+
+
+def test_llm_null_interest_filled_from_chi_kung_keyword():
+    history = [
+        {"role": "user", "content": "tienen chi kung?"},
+        {"role": "assistant", "content": "Sí, Chi Kung Terapéutico..."},
+        {"role": "user", "content": "emiliano 1167462412"},
+    ]
+    client = _mock_llm_client(
+        {
+            "nombre": "Emiliano",
+            "telefono": "1167462412",
+            "intereses": None,
+        }
+    )
+    summary = build_session_summary(history, client=client)
+    assert "chi kung" in summary.interests.lower()
+    assert "no detectado" not in summary.interests.lower()
 
 
 def test_llm_specific_interest_not_overwritten_by_keyword():

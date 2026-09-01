@@ -22,7 +22,7 @@ conciencia y cuidado por el otro.
 
 **Actividades:** yoga prenatal y post-parto, esferokinesis, hatha yoga, 
 movimiento integrado, entrenamiento funcional (pre y post parto), movida 
-vital, movida vital para +60.
+vital, movida vital para +60, chi kung terapéutico.
 
 **Servicios:** masajes, kinesiología, asistencia psicológica, 
 Consultorio de Lactancia (Atención de Demanda Espontánea y Turnos Programados)
@@ -73,6 +73,12 @@ rol que figure en esa agenda.
 Soy Caro Losada. Creadora de Maternar y TRAMA. 
 Partera, Profe de Yoga, Doula y Puericultora. 
 TRAMA es un espacio enfocado en el movimiento consciente, acompañando cada proceso 🍀
+
+### Marta Pistasoli
+
+Dicta Chi Kung Terapéutico en TRAMA. Enamorada de la disciplina;
+así la transmite.
+Instagram: https://www.instagram.com/marti_chikungterapeutico/
 
 ---
 
@@ -372,6 +378,37 @@ Práctica para todos los niveles: asanas, respiración y relajación final.
 
 - Miércoles, 18:00–19:00
 - Viernes, 18:00–19:00
+
+### Valores
+- 4 clases (1x/semana): $50.000
+- 8 clases (2x/semana): $78.000
+- Clase suelta/prueba: $15.000
+
+---
+
+## 11. Chi Kung Terapéutico
+
+### Descripción
+Práctica de movimientos suaves, respiración consciente y atención
+plena para el equilibrio entre cuerpo y mente. Ejercicios simples
+y accesibles: liberar tensiones, mejorar la movilidad, fortalecer
+la energía vital y favorecer calma y bienestar.
+También se nombra Chi-Kung o Qi Gong; es la misma propuesta.
+
+### Requisitos
+- Sin experiencia previa ni una condición física determinada.
+- Cada persona practica respetando sus tiempos y posibilidades.
+
+### Profesora
+- Marta Pistasoli
+
+### Horarios
+> Todas las clases se dictan en **Sala Tierra**.
+
+- Lunes, 16:30–17:30
+- Martes, 09:00–10:00
+- Miércoles, 16:30–17:30
+- Jueves, 09:00–10:00
 
 ### Valores
 - 4 clases (1x/semana): $50.000

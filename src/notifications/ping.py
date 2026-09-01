@@ -30,6 +30,9 @@ _ACTIVITY_KEYWORDS = (
     "lactancia",
     "taller",
     "parto",
+    "chi kung",
+    "chi-kung",
+    "qigong",
 )
 
 _SUMMARY_SYSTEM_PROMPT = """\
